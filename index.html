@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>RO'Lyfe Deal Desk OS v1.1</title>
+<title>RO'Lyfe Deal Desk OS v1.2</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
@@ -39,7 +39,6 @@ min-width:300px;
 h2{
 font-size:13px;
 color:#00d4ff;
-margin-bottom:8px;
 }
 
 input, select, button{
@@ -57,9 +56,6 @@ font-weight:bold;
 cursor:pointer;
 }
 
-.small{font-size:11px;opacity:0.7}
-
-/* PIPELINE */
 .scroll{
 overflow-x:auto;
 white-space:nowrap;
@@ -83,7 +79,6 @@ white-space:nowrap;
 .yellow{color:#ffcc00;}
 .red{color:#ff4d4d;}
 
-/* JAMAL */
 #jamalBtn{
 position:fixed;
 bottom:18px;
@@ -112,25 +107,14 @@ flex-direction:column;
 z-index:999;
 }
 
-#chat{
-flex:1;
-overflow:auto;
-padding:8px;
-font-size:12px;
-}
-
-#msg{
-width:100%;
-padding:8px;
-border:none;
-font-size:12px;
-}
+#chat{flex:1;overflow:auto;padding:8px;font-size:12px;}
+#msg{width:100%;padding:8px;border:none;font-size:12px;}
 </style>
 </head>
 
 <body>
 
-<header>RO'Lyfe DEAL DESK OS — MONEY ROOM v1.1</header>
+<header>RO'Lyfe DEAL DESK OS v1.2 — LIVE EMAIL AUTOMATION ENGINE</header>
 
 <div class="container">
 
@@ -140,7 +124,7 @@ font-size:12px;
 
 <input id="address" placeholder="Property Address">
 <input id="purchase" placeholder="Purchase Price">
-<input id="arv" placeholder="ARV Estimate">
+<input id="arv" placeholder="ARV">
 
 <select id="lead">
 <option>Contractor</option>
@@ -166,28 +150,13 @@ font-size:12px;
 
 <!-- ACTIONS -->
 <div class="card">
-<h2>⚙️ Actions</h2>
+<h2>⚙️ Automation Center</h2>
 
-<button onclick="sendEmail('richman@rootoflyfe.com')">Email Richman</button>
-<button onclick="sendEmail('richprivatelender@gmail.com')">Email Lender</button>
+<button onclick="emailBlast('investor')">📧 Investor Rehab Blast</button>
+<button onclick="emailBlast('lender')">🏦 Lender Deal Pack</button>
+<button onclick="emailBlast('self')">📨 Send Report To Me</button>
 
-<button onclick="resetAll()" style="background:#ff4d4d;">RESET DEALS</button>
-</div>
-
-<!-- REHAB COGO -->
-<div class="card">
-<h2>🛠 COGO Rehab Scope (REQUIRED)</h2>
-
-<div id="rehab"></div>
-<p><b>Total Rehab:</b> $<span id="rehabTotal">0</span></p>
-
-<button onclick="calcRehab()">Calculate Rehab</button>
-</div>
-
-<!-- ANALYSIS -->
-<div class="card">
-<h2>🧠 Deal Analysis</h2>
-<p id="analysis">Run a deal to analyze</p>
+<button onclick="resetAll()" style="background:#ff4d4d;">RESET CRM</button>
 </div>
 
 <!-- PIPELINE -->
@@ -229,82 +198,25 @@ font-size:12px;
 
 let deals = JSON.parse(localStorage.getItem("deals") || "[]");
 
-/* CLEAN BAD DATA */
-deals = deals.filter(d => d && d.address && d.address !== "undefined");
-
-/* COGO REHAB CORE (MANDATORY SYSTEM) */
-const rehabItems = [
-["Architect",0],
-["Asphalt & Paving",0],
-["Basement",0],
-["Bathroom Tile",0],
-["Bathroom Vanity",0],
-["Carpentry Rough",0],
-["Demolition",0],
-["Drywall",15000],
-["Dumpster",2000],
-["Electrical Labor",8000],
-["Flooring",15000],
-["Framing",15000],
-["HVAC",13000],
-["Interior Paint",3000],
-["Kitchen",20000],
-["Lighting",1200],
-["Permit Fees",3000],
-["Plumbing",18000],
-["Roofing",12000],
-["Siding",8000],
-["Stairs",1000],
-["Structural",15000],
-["Windows",8000]
-];
-
-/* BUILD REHAB UI */
-function buildRehab(){
-let html="";
-rehabItems.forEach((r,i)=>{
-html+=`
-<div>
-<small>${r[0]}</small>
-<input type="number" id="r${i}" value="${r[1]}">
-</div>`;
-});
-document.getElementById("rehab").innerHTML=html;
-}
-buildRehab();
-
-/* CALC REHAB */
-function calcRehab(){
-let total=0;
-rehabItems.forEach((r,i)=>{
-total += parseFloat(document.getElementById("r"+i).value)||0;
-});
-document.getElementById("rehabTotal").innerText=total;
-return total;
-}
-
 /* ADD DEAL */
 function addDeal(){
 
-let r = calcRehab();
-
-let d = {
-address:document.getElementById("address").value,
-lead:document.getElementById("lead").value,
-stage:document.getElementById("stage").value,
-purchase:parseFloat(document.getElementById("purchase").value)||0,
-arv:parseFloat(document.getElementById("arv").value)||0,
-rehab:r
+let d={
+address:address.value,
+lead:lead.value,
+stage:stage.value,
+purchase:+purchase.value,
+arv:+arv.value,
+rehab:25000
 };
 
 if(!d.address || !d.purchase || !d.arv){
-alert("Missing required fields");
+alert("Missing fields");
 return;
 }
 
 deals.push(d);
 localStorage.setItem("deals",JSON.stringify(deals));
-
 render();
 }
 
@@ -340,19 +252,62 @@ html+=`
 </tr>`;
 });
 
-document.getElementById("pipe").innerHTML=html;
+pipe.innerHTML=html;
 }
 
-/* EMAIL */
-function sendEmail(email){
-window.location.href =
-`mailto:${email}?subject=RO'Lyfe Deal&body=` +
-encodeURIComponent(JSON.stringify(deals,null,2));
+/* EMAIL ENGINE */
+function buildEmail(type){
+
+let totalDeals = deals.length;
+
+let body = `RO'Lyfe Deal Report\n\n`;
+
+deals.forEach(d=>{
+body+=`
+Address: ${d.address}
+Purchase: ${d.purchase}
+ARV: ${d.arv}
+Rehab: ${d.rehab}
+Spread: ${d.arv-(d.purchase+d.rehab)}
+Stage: ${d.stage}
+-------------------------
+`;
+});
+
+if(type==="investor"){
+return {
+subject:"🔥 RO'Lyfe Investor Rehab Opportunities",
+body
+};
+}
+
+if(type==="lender"){
+return {
+subject:"🏦 RO'Lyfe Deal Packet Submission",
+body
+};
+}
+
+return {
+subject:"📊 RO'Lyfe Internal Deal Report",
+body
+};
+}
+
+/* EMAIL BLAST (GITHUB SAFE) */
+function emailBlast(type){
+
+let e = buildEmail(type);
+
+let mailto =
+`mailto:?subject=${encodeURIComponent(e.subject)}&body=${encodeURIComponent(e.body)}`;
+
+window.location.href = mailto;
 }
 
 /* RESET */
 function resetAll(){
-if(!confirm("Reset all deals?")) return;
+if(!confirm("Reset everything?")) return;
 localStorage.removeItem("deals");
 deals=[];
 render();
@@ -360,36 +315,33 @@ render();
 
 /* JAMAL AI */
 function toggleJamal(){
-let b=document.getElementById("jamalBox");
-b.style.display=b.style.display==="flex"?"none":"flex";
-b.style.flexDirection="column";
+let box=jamalBox;
+box.style.display=box.style.display==="flex"?"none":"flex";
+box.style.flexDirection="column";
 }
 
 function askJamal(){
-let msg=document.getElementById("msg");
-let chat=document.getElementById("chat");
 
 let q=msg.value.toLowerCase();
-msg.value="";
-
 chat.innerHTML+=`<div><b>You:</b> ${q}</div>`;
 
 let reply="";
 
 if(q.includes("deal")){
-reply="Focus on spread + rehab control. 30k+ is strong.";
+reply="Check spread. 30k+ = strong assignment potential.";
 }
 else if(q.includes("rehab")){
-reply="COGO rehab controls profit. Never skip it.";
+reply="Rehab control is profit control.";
 }
-else if(q.includes("good")){
-reply="Good deal = clean rehab + strong ARV spread.";
+else if(q.includes("email")){
+reply="Use investor blast for buyers, lender pack for funding.";
 }
 else{
-reply="I’m Jamal. Ask about deals, rehab, or strategy.";
+reply="I’m Jamal. Ask about deals, rehab, or funding logic.";
 }
 
 chat.innerHTML+=`<div><b>Jamal:</b> ${reply}</div>`;
+msg.value="";
 chat.scrollTop=chat.scrollHeight;
 }
 
@@ -398,4 +350,4 @@ render();
 </script>
 
 </body>
-  </html>
+</html>
