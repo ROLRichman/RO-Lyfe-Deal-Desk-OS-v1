@@ -18,6 +18,7 @@ padding:14px;
 background:#151925;
 text-align:center;
 font-weight:bold;
+font-size:14px;
 }
 
 .container{
@@ -82,28 +83,27 @@ white-space:nowrap;
 .yellow{color:#ffcc00;}
 .red{color:#ff4d4d;}
 
-/* JAMAL AI */
+/* JAMAL */
 #jamalBtn{
 position:fixed;
-bottom:20px;
-right:20px;
-background:#00d4ff;
-color:#000;
-border-radius:50%;
+bottom:18px;
+right:18px;
 width:55px;
 height:55px;
-font-size:22px;
+border-radius:50%;
+background:#00d4ff;
 border:none;
+font-size:22px;
 cursor:pointer;
 z-index:999;
 }
 
 #jamalBox{
 position:fixed;
-bottom:85px;
-right:20px;
+bottom:80px;
+right:18px;
 width:300px;
-height:360px;
+height:350px;
 background:#1b2130;
 border:1px solid #333;
 border-radius:10px;
@@ -121,8 +121,8 @@ font-size:12px;
 
 #msg{
 width:100%;
-border:none;
 padding:8px;
+border:none;
 font-size:12px;
 }
 </style>
@@ -130,7 +130,7 @@ font-size:12px;
 
 <body>
 
-<header>RO'Lyfe DEAL DESK OS v1.1 — MONEY ROOM SYSTEM</header>
+<header>RO'Lyfe DEAL DESK OS — MONEY ROOM v1.1</header>
 
 <div class="container">
 
@@ -140,7 +140,7 @@ font-size:12px;
 
 <input id="address" placeholder="Property Address">
 <input id="purchase" placeholder="Purchase Price">
-<input id="arv" placeholder="ARV">
+<input id="arv" placeholder="ARV Estimate">
 
 <select id="lead">
 <option>Contractor</option>
@@ -168,20 +168,26 @@ font-size:12px;
 <div class="card">
 <h2>⚙️ Actions</h2>
 
-<a href="https://form.jotform.com/261416399941062" target="_blank"><button>Loan App</button></a>
-<a href="https://form.jotform.com/253154859148062" target="_blank"><button>Upload Docs</button></a>
-
 <button onclick="sendEmail('richman@rootoflyfe.com')">Email Richman</button>
 <button onclick="sendEmail('richprivatelender@gmail.com')">Email Lender</button>
 
-<button onclick="resetAll()" style="background:#ff4d4d;">RESET CRM</button>
+<button onclick="resetAll()" style="background:#ff4d4d;">RESET DEALS</button>
 </div>
 
-<!-- ANALYTICS -->
+<!-- REHAB COGO -->
 <div class="card">
-<h2>🧠 Deal Analyzer</h2>
+<h2>🛠 COGO Rehab Scope (REQUIRED)</h2>
 
-<p id="analysis">Enter deal to analyze</p>
+<div id="rehab"></div>
+<p><b>Total Rehab:</b> $<span id="rehabTotal">0</span></p>
+
+<button onclick="calcRehab()">Calculate Rehab</button>
+</div>
+
+<!-- ANALYSIS -->
+<div class="card">
+<h2>🧠 Deal Analysis</h2>
+<p id="analysis">Run a deal to analyze</p>
 </div>
 
 <!-- PIPELINE -->
@@ -206,11 +212,12 @@ font-size:12px;
 <tbody id="pipe"></tbody>
 </table>
 </div>
-</div>
 
 </div>
 
-<!-- JAMAL AI -->
+</div>
+
+<!-- JAMAL -->
 <button id="jamalBtn" onclick="toggleJamal()">🤖</button>
 
 <div id="jamalBox">
@@ -222,13 +229,64 @@ font-size:12px;
 
 let deals = JSON.parse(localStorage.getItem("deals") || "[]");
 
-/* CLEAN INVALID DATA */
-deals = deals.filter(d =>
-d && d.address && !d.address.includes("undefined") && !isNaN(d.purchase)
-);
+/* CLEAN BAD DATA */
+deals = deals.filter(d => d && d.address && d.address !== "undefined");
+
+/* COGO REHAB CORE (MANDATORY SYSTEM) */
+const rehabItems = [
+["Architect",0],
+["Asphalt & Paving",0],
+["Basement",0],
+["Bathroom Tile",0],
+["Bathroom Vanity",0],
+["Carpentry Rough",0],
+["Demolition",0],
+["Drywall",15000],
+["Dumpster",2000],
+["Electrical Labor",8000],
+["Flooring",15000],
+["Framing",15000],
+["HVAC",13000],
+["Interior Paint",3000],
+["Kitchen",20000],
+["Lighting",1200],
+["Permit Fees",3000],
+["Plumbing",18000],
+["Roofing",12000],
+["Siding",8000],
+["Stairs",1000],
+["Structural",15000],
+["Windows",8000]
+];
+
+/* BUILD REHAB UI */
+function buildRehab(){
+let html="";
+rehabItems.forEach((r,i)=>{
+html+=`
+<div>
+<small>${r[0]}</small>
+<input type="number" id="r${i}" value="${r[1]}">
+</div>`;
+});
+document.getElementById("rehab").innerHTML=html;
+}
+buildRehab();
+
+/* CALC REHAB */
+function calcRehab(){
+let total=0;
+rehabItems.forEach((r,i)=>{
+total += parseFloat(document.getElementById("r"+i).value)||0;
+});
+document.getElementById("rehabTotal").innerText=total;
+return total;
+}
 
 /* ADD DEAL */
 function addDeal(){
+
+let r = calcRehab();
 
 let d = {
 address:document.getElementById("address").value,
@@ -236,11 +294,11 @@ lead:document.getElementById("lead").value,
 stage:document.getElementById("stage").value,
 purchase:parseFloat(document.getElementById("purchase").value)||0,
 arv:parseFloat(document.getElementById("arv").value)||0,
-rehab:25000
+rehab:r
 };
 
 if(!d.address || !d.purchase || !d.arv){
-alert("Missing data");
+alert("Missing required fields");
 return;
 }
 
@@ -287,8 +345,8 @@ document.getElementById("pipe").innerHTML=html;
 
 /* EMAIL */
 function sendEmail(email){
-window.location.href=
-`mailto:${email}?subject=RO'Lyfe Deal&body=`+
+window.location.href =
+`mailto:${email}?subject=RO'Lyfe Deal&body=` +
 encodeURIComponent(JSON.stringify(deals,null,2));
 }
 
@@ -302,33 +360,33 @@ render();
 
 /* JAMAL AI */
 function toggleJamal(){
-let box=document.getElementById("jamalBox");
-box.style.display=box.style.display==="flex"?"none":"flex";
-box.style.flexDirection="column";
+let b=document.getElementById("jamalBox");
+b.style.display=b.style.display==="flex"?"none":"flex";
+b.style.flexDirection="column";
 }
 
 function askJamal(){
-let input=document.getElementById("msg");
+let msg=document.getElementById("msg");
 let chat=document.getElementById("chat");
 
-let q=input.value.toLowerCase();
-input.value="";
+let q=msg.value.toLowerCase();
+msg.value="";
 
 chat.innerHTML+=`<div><b>You:</b> ${q}</div>`;
 
 let reply="";
 
 if(q.includes("deal")){
-reply="Check purchase vs ARV spread. Aim 30k+ assignable.";
+reply="Focus on spread + rehab control. 30k+ is strong.";
 }
 else if(q.includes("rehab")){
-reply="Keep rehab tight. Overestimating kills spreads.";
+reply="COGO rehab controls profit. Never skip it.";
 }
 else if(q.includes("good")){
-reply="Good deal = strong spread + realistic rehab + clean exit.";
+reply="Good deal = clean rehab + strong ARV spread.";
 }
 else{
-reply="I’m Jamal. Ask me about deals, rehab, or spreads.";
+reply="I’m Jamal. Ask about deals, rehab, or strategy.";
 }
 
 chat.innerHTML+=`<div><b>Jamal:</b> ${reply}</div>`;
@@ -340,4 +398,4 @@ render();
 </script>
 
 </body>
-</html>
+  </html>
