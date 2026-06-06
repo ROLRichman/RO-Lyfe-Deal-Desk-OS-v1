@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>RO'Lyfe Deal Desk OS v1.2</title>
+<title>RO'Lyfe Deal Desk OS v1.4</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
@@ -19,35 +19,41 @@ background:#151925;
 text-align:center;
 font-weight:bold;
 font-size:14px;
+position:sticky;
+top:0;
+z-index:10;
 }
 
+/* MOBILE GRID */
 .container{
 display:flex;
-flex-wrap:wrap;
+flex-direction:column;
 gap:12px;
-padding:12px;
+padding:10px;
 }
 
 .card{
 background:#1b2130;
 padding:12px;
 border-radius:10px;
-flex:1;
-min-width:300px;
+width:100%;
+box-sizing:border-box;
 }
 
 h2{
 font-size:13px;
 color:#00d4ff;
+margin:6px 0;
 }
 
 input, select, button{
 width:100%;
-padding:8px;
+padding:10px;
 margin:4px 0;
 border:none;
 border-radius:6px;
-font-size:12px;
+font-size:13px;
+box-sizing:border-box;
 }
 
 button{
@@ -56,21 +62,23 @@ font-weight:bold;
 cursor:pointer;
 }
 
+button.danger{
+background:#ff4d4d;
+color:#fff;
+}
+
 .scroll{
 overflow-x:auto;
-white-space:nowrap;
-border:1px solid #222;
-border-radius:8px;
 }
 
 table{
-min-width:1200px;
+min-width:900px;
 border-collapse:collapse;
 font-size:10px;
 }
 
 th,td{
-padding:5px;
+padding:6px;
 border-bottom:1px solid #333;
 white-space:nowrap;
 }
@@ -79,26 +87,27 @@ white-space:nowrap;
 .yellow{color:#ffcc00;}
 .red{color:#ff4d4d;}
 
+/* JAMAL */
 #jamalBtn{
 position:fixed;
-bottom:18px;
-right:18px;
-width:55px;
-height:55px;
+bottom:16px;
+right:16px;
+width:56px;
+height:56px;
 border-radius:50%;
 background:#00d4ff;
 border:none;
 font-size:22px;
-cursor:pointer;
 z-index:999;
 }
 
 #jamalBox{
 position:fixed;
 bottom:80px;
-right:18px;
-width:300px;
-height:350px;
+right:16px;
+width:90%;
+max-width:320px;
+height:360px;
 background:#1b2130;
 border:1px solid #333;
 border-radius:10px;
@@ -107,14 +116,26 @@ flex-direction:column;
 z-index:999;
 }
 
-#chat{flex:1;overflow:auto;padding:8px;font-size:12px;}
-#msg{width:100%;padding:8px;border:none;font-size:12px;}
+#chat{
+flex:1;
+overflow:auto;
+padding:8px;
+font-size:12px;
+}
+
+#msg{
+padding:10px;
+border:none;
+font-size:12px;
+}
+
+.small{font-size:11px;opacity:0.7}
 </style>
 </head>
 
 <body>
 
-<header>RO'Lyfe DEAL DESK OS v1.2 — LIVE EMAIL AUTOMATION ENGINE</header>
+<header>RO'Lyfe DEAL DESK OS v1.4 — MOBILE MONEY ENGINE</header>
 
 <div class="container">
 
@@ -148,19 +169,46 @@ z-index:999;
 <button onclick="addDeal()">Add Deal</button>
 </div>
 
+<!-- COGO REHAB -->
+<div class="card">
+<h2>🛠 COGO Rehab Engine</h2>
+
+<select id="cat" onchange="loadItems()">
+<option value="">Select Category</option>
+<option>Structural</option>
+<option>Exterior</option>
+<option>Roofing</option>
+<option>Electrical</option>
+<option>Plumbing</option>
+<option>HVAC</option>
+<option>Kitchen</option>
+<option>Bathrooms</option>
+<option>Flooring</option>
+<option>Interior</option>
+<option>Site Work</option>
+</select>
+
+<select id="item"></select>
+
+<input id="cost" placeholder="Cost">
+
+<button onclick="addRehabItem()">Add Rehab Item</button>
+
+<p><b>Rehab Total:</b> $<span id="rehabTotal">0</span></p>
+</div>
+
 <!-- ACTIONS -->
 <div class="card">
-<h2>⚙️ Automation Center</h2>
+<h2>⚙️ Actions</h2>
 
-<button onclick="emailBlast('investor')">📧 Investor Rehab Blast</button>
-<button onclick="emailBlast('lender')">🏦 Lender Deal Pack</button>
-<button onclick="emailBlast('self')">📨 Send Report To Me</button>
-
-<button onclick="resetAll()" style="background:#ff4d4d;">RESET CRM</button>
+<button onclick="generatePacket()">📄 Investor Packet</button>
+<button onclick="downloadPDF()">⬇️ PDF Report</button>
+<button onclick="emailBlast()">📧 Email Blast</button>
+<button onclick="resetAll()" class="danger">RESET</button>
 </div>
 
 <!-- PIPELINE -->
-<div class="card" style="flex-basis:100%">
+<div class="card">
 <h2>📊 Pipeline</h2>
 
 <div class="scroll">
@@ -173,7 +221,6 @@ z-index:999;
 <th>Buy</th>
 <th>ARV</th>
 <th>Rehab</th>
-<th>Total</th>
 <th>Spread</th>
 <th>Status</th>
 </tr>
@@ -181,7 +228,6 @@ z-index:999;
 <tbody id="pipe"></tbody>
 </table>
 </div>
-
 </div>
 
 </div>
@@ -197,46 +243,79 @@ z-index:999;
 <script>
 
 let deals = JSON.parse(localStorage.getItem("deals") || "[]");
+let rehabTotal = 0;
+let rehabItems = [];
+
+/* COGO STRUCTURE */
+const cogo = {
+Structural:["Foundation","Framing"],
+Exterior:["Siding","Windows","Doors"],
+Roofing:["Roof Replacement"],
+Electrical:["Rough","Panel","Fixtures"],
+Plumbing:["Rough","Fixtures","Water Heater"],
+HVAC:["Furnace","AC","Ductwork"],
+Kitchen:["Cabinets","Countertops","Appliances"],
+Bathrooms:["Tile","Vanity","Toilet"],
+Flooring:["Wood","Vinyl","Carpet"],
+Interior:["Drywall","Paint","Trim"],
+"Site Work":["Demolition","Cleanup"]
+};
+
+/* LOAD ITEMS */
+function loadItems(){
+item.innerHTML="";
+(cogo[cat.value]||[]).forEach(i=>{
+let o=document.createElement("option");
+o.value=i;
+o.text=i;
+item.appendChild(o);
+});
+}
+
+/* ADD REHAB */
+function addRehabItem(){
+let i=item.value;
+let c=parseFloat(cost.value)||0;
+if(!i||c<=0)return alert("Missing rehab data");
+
+rehabItems.push({i,c});
+rehabTotal+=c;
+rehabTotalEl.innerText=rehabTotal;
+cost.value="";
+}
 
 /* ADD DEAL */
 function addDeal(){
 
-let d={
+let p=parseFloat(purchase.value)||0;
+let a=parseFloat(arv.value)||0;
+
+if(!address.value||!p||!a) return alert("Missing fields");
+
+deals.push({
 address:address.value,
 lead:lead.value,
 stage:stage.value,
-purchase:+purchase.value,
-arv:+arv.value,
-rehab:25000
-};
+purchase:p,
+arv:a,
+rehab:rehabTotal
+});
 
-if(!d.address || !d.purchase || !d.arv){
-alert("Missing fields");
-return;
-}
-
-deals.push(d);
 localStorage.setItem("deals",JSON.stringify(deals));
+
 render();
 }
 
 /* PIPELINE */
 function render(){
-
 let html="";
 
 deals.forEach(d=>{
-
 let total=d.purchase+d.rehab;
 let spread=d.arv-total;
 
-let status =
-spread>30000?"ASSIGNABLE":
-spread>10000?"REVIEW":"KILL";
-
-let color =
-spread>30000?"green":
-spread>10000?"yellow":"red";
+let status=spread>30000?"STRONG":spread>10000?"MID":"KILL";
+let color=spread>30000?"green":spread>10000?"yellow":"red";
 
 html+=`
 <tr>
@@ -246,7 +325,6 @@ html+=`
 <td>$${d.purchase}</td>
 <td>$${d.arv}</td>
 <td>$${d.rehab}</td>
-<td>$${total}</td>
 <td>$${spread}</td>
 <td class="${color}">${status}</td>
 </tr>`;
@@ -255,92 +333,55 @@ html+=`
 pipe.innerHTML=html;
 }
 
-/* EMAIL ENGINE */
-function buildEmail(type){
-
-let totalDeals = deals.length;
-
-let body = `RO'Lyfe Deal Report\n\n`;
+/* EMAIL */
+function emailBlast(){
+let body="RO'Lyfe DEAL REPORT\n\n";
 
 deals.forEach(d=>{
-body+=`
-Address: ${d.address}
-Purchase: ${d.purchase}
-ARV: ${d.arv}
-Rehab: ${d.rehab}
-Spread: ${d.arv-(d.purchase+d.rehab)}
-Stage: ${d.stage}
--------------------------
-`;
+body+=`${d.address} | Buy:${d.purchase} | ARV:${d.arv} | Rehab:${d.rehab}\n`;
 });
 
-if(type==="investor"){
-return {
-subject:"🔥 RO'Lyfe Investor Rehab Opportunities",
-body
-};
+window.location.href=
+`mailto:?subject=RO'Lyfe Deal Report&body=${encodeURIComponent(body)}`;
 }
 
-if(type==="lender"){
-return {
-subject:"🏦 RO'Lyfe Deal Packet Submission",
-body
-};
-}
+/* PDF */
+function downloadPDF(){
+let w=window.open();
+w.document.write("<h2>RO'Lyfe Report</h2>");
 
-return {
-subject:"📊 RO'Lyfe Internal Deal Report",
-body
-};
-}
+deals.forEach(d=>{
+w.document.write(`<p>${d.address} | ${d.purchase} | ${d.arv} | ${d.rehab}</p>`);
+});
 
-/* EMAIL BLAST (GITHUB SAFE) */
-function emailBlast(type){
-
-let e = buildEmail(type);
-
-let mailto =
-`mailto:?subject=${encodeURIComponent(e.subject)}&body=${encodeURIComponent(e.body)}`;
-
-window.location.href = mailto;
+w.print();
 }
 
 /* RESET */
 function resetAll(){
-if(!confirm("Reset everything?")) return;
-localStorage.removeItem("deals");
-deals=[];
-render();
+if(confirm("Reset everything?")){
+localStorage.clear();
+location.reload();
+}
 }
 
-/* JAMAL AI */
+/* JAMAL */
 function toggleJamal(){
-let box=jamalBox;
-box.style.display=box.style.display==="flex"?"none":"flex";
-box.style.flexDirection="column";
+jamalBox.style.display=jamalBox.style.display==="flex"?"none":"flex";
+jamalBox.style.flexDirection="column";
 }
 
 function askJamal(){
-
 let q=msg.value.toLowerCase();
 chat.innerHTML+=`<div><b>You:</b> ${q}</div>`;
 
-let reply="";
+let r="Ask about deals, rehab, or spreads.";
 
-if(q.includes("deal")){
-reply="Check spread. 30k+ = strong assignment potential.";
-}
-else if(q.includes("rehab")){
-reply="Rehab control is profit control.";
-}
-else if(q.includes("email")){
-reply="Use investor blast for buyers, lender pack for funding.";
-}
-else{
-reply="I’m Jamal. Ask about deals, rehab, or funding logic.";
-}
+if(q.includes("deal")) r="Focus on spread above 30k.";
+if(q.includes("rehab")) r="Control rehab = control profit.";
+if(q.includes("money")) r="Money follows structure, not emotion.";
 
-chat.innerHTML+=`<div><b>Jamal:</b> ${reply}</div>`;
+chat.innerHTML+=`<div><b>Jamal:</b> ${r}</div>`;
 msg.value="";
 chat.scrollTop=chat.scrollHeight;
 }
