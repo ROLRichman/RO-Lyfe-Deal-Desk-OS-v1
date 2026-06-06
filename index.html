@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>RO'Lyfe Deal Desk OS v1 - Money Room System</title>
+<title>RO'Lyfe Deal Desk OS v1 - Money Room Edition</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
@@ -32,7 +32,7 @@ background:#1b2130;
 padding:12px;
 border-radius:10px;
 flex:1;
-min-width:280px;
+min-width:300px;
 }
 
 h2{
@@ -43,11 +43,11 @@ margin-bottom:8px;
 
 input, select, button{
 width:100%;
-padding:10px;
-margin:5px 0;
+padding:8px;
+margin:3px 0;
 border:none;
-border-radius:6px;
-font-size:13px;
+border-radius:5px;
+font-size:12px;
 }
 
 button{
@@ -58,22 +58,22 @@ cursor:pointer;
 
 .small{font-size:11px;opacity:0.7}
 
-/* 🔥 PIPELINE SCROLL FIX */
-.pipeline-wrap{
+/* PIPELINE SCROLL */
+.scroll{
 overflow-x:auto;
 white-space:nowrap;
 border:1px solid #222;
-border-radius:10px;
+border-radius:8px;
 }
 
 table{
-min-width:1100px;
+min-width:1300px;
 border-collapse:collapse;
-font-size:11px;
+font-size:10px;
 }
 
 th,td{
-padding:6px;
+padding:5px;
 border-bottom:1px solid #333;
 white-space:nowrap;
 }
@@ -82,46 +82,34 @@ white-space:nowrap;
 .yellow{color:#ffcc00;}
 .red{color:#ff4d4d;}
 
-a{color:#00d4ff;}
+textarea{width:100%;height:60px;}
 </style>
 </head>
 
 <body>
 
-<header>RO'Lyfe DEAL DESK OS v1 — MONEY ROOM EDITION</header>
+<header>RO'Lyfe DEAL DESK OS v1 — FULL MONEY ROOM ENGINE</header>
 
 <div class="container">
 
-<!-- 📥 APPLICATION GATE -->
+<!-- APPLICATION -->
 <div class="card">
-<h2>📥 Required Application (Before Deal Review)</h2>
+<h2>📥 Loan Application Gate</h2>
 
-<p class="small">
-No application = no underwriting. This is your capital gate.
-</p>
+<a href="https://form.jotform.com/261416399941062" target="_blank"><button>Loan Application</button></a>
+<a href="https://form.jotform.com/253154859148062" target="_blank"><button>Upload Docs</button></a>
 
-<a href="https://form.jotform.com/261416399941062" target="_blank">
-<button>Open Loan Application</button>
-</a>
-
-<a href="https://form.jotform.com/253154859148062" target="_blank">
-<button>Upload Documents</button>
-</a>
-
-<p class="small">
-Loan Officer Policy + Intake Required Before Processing
-</p>
+<p class="small">No application = no underwriting</p>
 </div>
 
-<!-- 📥 DEAL INTAKE -->
+<!-- DEAL INPUT -->
 <div class="card">
-<h2>📥 Deal Intake</h2>
+<h2>📍 Deal Intake</h2>
 
 <input id="address" placeholder="Property Address">
 <input id="purchase" placeholder="Purchase Price">
-<input id="arv" placeholder="ARV Estimate">
-<input id="lead" placeholder="Lead Source (contractor/realtor/bee/direct)">
-
+<input id="arv" placeholder="ARV">
+<input id="lead" placeholder="Lead Source">
 <select id="stage">
 <option>UNDERWRITING</option>
 <option>SENT</option>
@@ -130,49 +118,54 @@ Loan Officer Policy + Intake Required Before Processing
 </select>
 
 <button onclick="addDeal()">Add Deal</button>
-
-<p class="small">CRM memory active (browser storage)</p>
 </div>
 
-<!-- 🛠 REHAB ENGINE (COGO STYLE) -->
+<!-- REHAB COGO ENGINE -->
 <div class="card">
-<h2>🛠 Rehab COGO Estimate Engine</h2>
+<h2>🛠 Rehab COGO Calculator</h2>
 
-<select id="rehabType">
-<option>Light Rehab</option>
-<option>Medium Rehab</option>
-<option>Heavy Rehab</option>
-</select>
+<div id="rehabGrid"></div>
 
-<input id="customRehab" placeholder="Override Rehab Cost (optional)">
+<p><b>Subtotal:</b> $<span id="subtotal">0</span></p>
 
-<button onclick="runAnalysis()">Run Deal Analysis</button>
-
-<p id="analysis"></p>
-<p id="decision"></p>
+<button onclick="calculateRehab()">Calculate Rehab</button>
 </div>
 
-<!-- ⚙️ SYSTEM LINKS -->
+<!-- SCORING + ANALYSIS -->
 <div class="card">
-<h2>⚙️ RO’Lyfe Systems</h2>
+<h2>🧠 Contractor Score + Deal Logic</h2>
 
-<a href="https://rolrichman.github.io/RO-Lyfe-Strategy-Arena-/" target="_blank">Strategy Arena</a><br>
-<a href="https://rolrichman.github.io/rolyfe-os/" target="_blank">RO’Lyfe OS</a><br>
-<a href="https://rolrichman.github.io/RO-Lyfe-Closers-OS/" target="_blank">Closers OS</a><br>
-<a href="https://rolrichman.github.io/rolyfe-contract-documents-hub/" target="_blank">Contract Hub</a>
+<input id="speed" placeholder="Speed (1-10)">
+<input id="quality" placeholder="Quality (1-10)">
+<input id="cost" placeholder="Cost Efficiency (1-10)">
 
+<button onclick="scoreContractor()">Score Contractor</button>
+
+<p id="scoreOut"></p>
+
+<button onclick="runDeal()">Run Deal Analysis</button>
+
+<p id="dealOut"></p>
 </div>
 
-<!-- 📊 PIPELINE -->
+<!-- ACTION -->
+<div class="card">
+<h2>⚙️ Capital Actions</h2>
+
+<button onclick="sendBlast()">Send Email Blast</button>
+<button onclick="generatePDF()">Generate Deal PDF</button>
+</div>
+
+<!-- PIPELINE -->
 <div class="card" style="flex-basis:100%">
-<h2>📊 Deal Pipeline (Swipe / Scroll Enabled)</h2>
+<h2>📊 Pipeline (Scroll Enabled)</h2>
 
-<div class="pipeline-wrap">
+<div class="scroll">
 <table>
 <thead>
 <tr>
 <th>Address</th>
-<th>Source</th>
+<th>Lead</th>
 <th>Stage</th>
 <th>Buy</th>
 <th>ARV</th>
@@ -182,7 +175,7 @@ Loan Officer Policy + Intake Required Before Processing
 <th>Status</th>
 </tr>
 </thead>
-<tbody id="pipeline"></tbody>
+<tbody id="pipe"></tbody>
 </table>
 </div>
 
@@ -192,100 +185,149 @@ Loan Officer Policy + Intake Required Before Processing
 
 <script>
 
+/* FULL REHAB STRUCTURE */
+const rehabItems = [
+["264","Architect",0],
+["160","Asphalt & Paving",0],
+["848","Basement",0],
+["740","Bathroom Accessories / Mirror",0],
+["840","Bathroom Tile",0],
+["550","Bathroom Vanity & Countertop",0],
+["841","Bedroom Hardware",0],
+["352","Carpentry Rough",0],
+["700","Carpets",0],
+["418","Ceiling Work",0],
+["752","Closet / Shelves",0],
+["430","Concrete Material",0],
+["314","Contingency (10%)",0],
+["384","Demolition",0],
+["704","Drywall",15000],
+["213","Dumpster",2000],
+["354","Electrical Labor",8000],
+["600","Exterior Doors",2500],
+["706","Exterior Painting",0],
+["710","Flooring",15000],
+["536","Framing Labor",15000],
+["650","HVAC",13000],
+["712","Interior Painting",3000],
+["842","Kitchen",20000],
+["646","Lighting",1200],
+["186","Permit Fees",3000],
+["360","Plumbing Labor",18000],
+["582","Roofing",12000],
+["552","Siding",8000],
+["614","Bath Fixtures",3000],
+["750","Stairs / Railings",1000],
+["510","Structural",15000],
+["412","Water Heater",1300],
+["618","Windows",8000]
+];
+
 let deals = JSON.parse(localStorage.getItem("deals") || "[]");
 
-/* 🧠 REHAB ENGINE (COGO STYLE SIMPLIFIED) */
-function rehabEngine(type){
-if(type === "Light Rehab") return 15000;
-if(type === "Medium Rehab") return 40000;
-return 80000;
+/* BUILD REHAB UI */
+function buildRehab(){
+let html="";
+rehabItems.forEach((r,i)=>{
+html+=`
+<div>
+<small>${r[0]} - ${r[1]}</small>
+<input type="number" id="r${i}" value="${r[2]}">
+</div>`;
+});
+document.getElementById("rehabGrid").innerHTML=html;
+}
+buildRehab();
+
+/* CALC REHAB */
+function calculateRehab(){
+let total=0;
+rehabItems.forEach((r,i)=>{
+let v=parseFloat(document.getElementById("r"+i).value)||0;
+total+=v;
+});
+document.getElementById("subtotal").innerText=total;
+return total;
 }
 
-function clean(v){
-let n = parseFloat(v);
-return isNaN(n) ? null : n;
+/* CONTRACTOR SCORE */
+function scoreContractor(){
+let s=parseFloat(document.getElementById("speed").value)||0;
+let q=parseFloat(document.getElementById("quality").value)||0;
+let c=parseFloat(document.getElementById("cost").value)||0;
+
+let score=(s+q+c)/3;
+
+document.getElementById("scoreOut").innerText=
+"Contractor Score: "+score.toFixed(2)+"/10";
 }
 
-/* 📥 ADD DEAL */
+/* DEAL LOGIC */
+function runDeal(){
+let p=parseFloat(document.getElementById("purchase").value)||0;
+let a=parseFloat(document.getElementById("arv").value)||0;
+let r=calculateRehab();
+
+let spread=a-(p+r);
+
+document.getElementById("dealOut").innerText=
+"Spread: $"+spread.toLocaleString();
+}
+
+/* ADD DEAL */
 function addDeal(){
-
-let d = {
-address: document.getElementById("address").value.trim(),
-purchase: clean(document.getElementById("purchase").value),
-arv: clean(document.getElementById("arv").value),
-lead: document.getElementById("lead").value || "unknown",
-stage: document.getElementById("stage").value,
-rehab: clean(document.getElementById("customRehab").value) || rehabEngine(document.getElementById("rehabType").value)
+let d={
+address:document.getElementById("address").value,
+lead:document.getElementById("lead").value,
+stage:document.getElementById("stage").value,
+purchase:parseFloat(document.getElementById("purchase").value)||0,
+arv:parseFloat(document.getElementById("arv").value)||0,
+rehab:calculateRehab()
 };
 
-if(!d.address || !d.purchase || !d.arv){
-alert("Missing required fields");
-return;
-}
-
 deals.push(d);
-localStorage.setItem("deals", JSON.stringify(deals));
-
+localStorage.setItem("deals",JSON.stringify(deals));
 render();
 }
 
-/* 🧠 ANALYSIS ENGINE */
-function runAnalysis(){
-
-let p = clean(document.getElementById("purchase").value);
-let a = clean(document.getElementById("arv").value);
-let r = clean(document.getElementById("customRehab").value) || rehabEngine(document.getElementById("rehabType").value);
-
-if(!p || !a){
-document.getElementById("analysis").innerHTML = "Fix inputs first";
-return;
-}
-
-let total = p + r;
-let spread = a - total;
-
-document.getElementById("analysis").innerHTML =
-`Total Cost: $${total.toLocaleString()}<br>Spread: $${spread.toLocaleString()}`;
-
-let status =
-spread > 30000 ? "🟢 ASSIGNABLE" :
-spread > 10000 ? "🟡 REVIEW" :
-"🔴 KILL DEAL";
-
-document.getElementById("decision").innerHTML = status;
-}
-
-/* 📊 PIPELINE RENDER */
+/* RENDER PIPELINE */
 function render(){
-
-let html = "";
-
+let html="";
 deals.forEach(d=>{
+let total=d.purchase+d.rehab;
+let spread=d.arv-total;
 
-if(!d.address || !d.purchase || !d.arv) return;
+let color=spread>30000?"green":spread>10000?"yellow":"red";
 
-let total = d.purchase + d.rehab;
-let spread = d.arv - total;
-
-let color =
-spread > 30000 ? "green" :
-spread > 10000 ? "yellow" : "red";
-
-html += `
+html+=`
 <tr>
 <td>${d.address}</td>
 <td>${d.lead}</td>
 <td>${d.stage}</td>
-<td>$${d.purchase.toLocaleString()}</td>
-<td>$${d.arv.toLocaleString()}</td>
-<td>$${d.rehab.toLocaleString()}</td>
-<td>$${total.toLocaleString()}</td>
-<td>$${spread.toLocaleString()}</td>
-<td class="${color}">${color.toUpperCase()}</td>
+<td>$${d.purchase}</td>
+<td>$${d.arv}</td>
+<td>$${d.rehab}</td>
+<td>$${total}</td>
+<td>$${spread}</td>
+<td class="${color}">${color}</td>
 </tr>`;
 });
+document.getElementById("pipe").innerHTML=html;
+}
 
-document.getElementById("pipeline").innerHTML = html;
+/* EMAIL BLAST (placeholder ready) */
+function sendBlast(){
+alert("Email blast layer ready (connect SMTP or Zapier next step)");
+}
+
+/* PDF GENERATOR (basic shell) */
+function generatePDF(){
+let w=window.open();
+w.document.write("<h1>RO'Lyfe Deal Packet</h1>");
+deals.forEach(d=>{
+w.document.write(`<p>${d.address} | Buy ${d.purchase} | ARV ${d.arv} | Rehab ${d.rehab}</p>`);
+});
+w.print();
 }
 
 render();
@@ -293,4 +335,4 @@ render();
 </script>
 
 </body>
-</html>
+  </html>
