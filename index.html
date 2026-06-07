@@ -2,45 +2,108 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>RO'Lyfe Deal Desk OS v1.6</title>
+<title>RO'Lyfe Institutional Deal Desk OS v2.0</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-body{margin:0;font-family:Arial;background:#0f1115;color:#fff}
-header{padding:14px;background:#151925;text-align:center;font-weight:bold;position:sticky;top:0}
-
-.container{display:flex;flex-direction:column;gap:12px;padding:12px}
-
-.card{background:#1b2130;padding:12px;border-radius:10px}
-
-h3{color:#00d4ff;margin:6px 0}
-
-input,select,button{
-width:100%;padding:10px;margin:4px 0;border-radius:6px;border:none;font-size:13px
+body{
+margin:0;
+font-family:Arial;
+background:#0f1115;
+color:#fff;
 }
 
-button{background:#00d4ff;font-weight:bold;cursor:pointer}
+header{
+position:sticky;
+top:0;
+background:#151925;
+padding:14px;
+text-align:center;
+font-weight:bold;
+z-index:10;
+}
 
-.small{font-size:11px;opacity:0.7}
+.container{
+display:flex;
+flex-direction:column;
+gap:12px;
+padding:12px;
+}
+
+.card{
+background:#1b2130;
+padding:12px;
+border-radius:10px;
+border:1px solid #2a3440;
+}
+
+h3{margin:6px 0;color:#00d4ff;font-size:14px}
+
+input,select,button{
+width:100%;
+padding:10px;
+margin:4px 0;
+border-radius:6px;
+border:none;
+font-size:13px;
+}
+
+button{
+background:#00d4ff;
+font-weight:bold;
+cursor:pointer;
+}
+
+button.danger{background:#ff4d4d;color:#fff}
 
 .scroll{overflow-x:auto}
 
-table{min-width:900px;font-size:10px;border-collapse:collapse}
-td,th{padding:6px;border-bottom:1px solid #333;white-space:nowrap}
+table{
+min-width:900px;
+font-size:10px;
+border-collapse:collapse;
+}
+
+td,th{
+padding:6px;
+border-bottom:1px solid #333;
+white-space:nowrap;
+}
 
 .green{color:#00ff99}
 .yellow{color:#ffcc00}
 .red{color:#ff4d4d}
 
-.toggle{
-display:flex;align-items:center;gap:10px;font-size:12px;margin-top:6px
+.itemRow{
+display:flex;
+align-items:center;
+gap:8px;
+margin:4px 0;
+font-size:12px;
+}
+
+.itemRow span{
+flex:1;
+}
+
+.itemRow input{
+width:90px;
+}
+
+.small{
+font-size:11px;
+opacity:0.7;
+white-space:pre-wrap;
+background:#0e141b;
+padding:8px;
+border-radius:8px;
 }
 </style>
 </head>
 
 <body>
 
-<header>RO'Lyfe OS v1.6 — FULL COGO REHAB ENGINE</header>
+<header>RO'Lyfe OS v2.0 — INSTITUTIONAL UNDERWRITING DESK</header>
 
 <div class="container">
 
@@ -52,38 +115,54 @@ display:flex;align-items:center;gap:10px;font-size:12px;margin-top:6px
 <input id="purchase" placeholder="Purchase Price">
 <input id="arv" placeholder="ARV">
 
-<div class="toggle">
-<input type="checkbox" id="bufferToggle">
-<label>Apply 10% Rehab Buffer</label>
+<select id="lead">
+<option>Contractor</option>
+<option>Realtor</option>
+<option>Wholesaler</option>
+<option>Seller</option>
+<option>Direct</option>
+</select>
+
+<select id="stage">
+<option>INTAKE</option>
+<option>UNDERWRITING</option>
+<option>SENT</option>
+<option>NEGOTIATION</option>
+<option>APPROVED</option>
+<option>CLOSED</option>
+</select>
+
+<button onclick="generateLinks()">🔗 Property Links</button>
+<div id="links" class="small"></div>
 </div>
 
-<button onclick="generateLinks()">🔗 Open Property Links</button>
-<div id="links"></div>
-</div>
-
-<!-- REHAB ENGINE -->
+<!-- REHAB -->
 <div class="card">
-<h3>🛠 COGO Rehab Scope (FULL LIST)</h3>
+<h3>🛠 FULL COGO REHAB (INSTITUTIONAL CHECKLIST)</h3>
 
-<div id="rehabList"></div>
+<div id="rehabGrid"></div>
 
 <button onclick="calcRehab()">Calculate Rehab</button>
 
-<p><b>Total Rehab:</b> $<span id="total">0</span></p>
-
-<div id="rehabExport" class="small"></div>
-
-<button onclick="exportRehab()">📄 Export Rehab Scope</button>
-<button onclick="emailRehab()">📧 Email Rehab</button>
-<button onclick="downloadPDF()">⬇ PDF</button>
-
+<div class="small" id="rehabOut">No selection yet</div>
 </div>
 
 <!-- STRATEGY -->
 <div class="card">
-<h3>📊 3-Tier Strategy</h3>
-<button onclick="runStrategy()">Run Analysis</button>
-<div id="strategy"></div>
+<h3>📊 Institutional Capital Stack (3-Tier)</h3>
+
+<button onclick="runStrategy()">Run Underwriting</button>
+
+<div id="strategy" class="small"></div>
+</div>
+
+<!-- ACTIONS -->
+<div class="card">
+<h3>⚙️ Export System</h3>
+
+<button onclick="emailDeal()">📧 Email Deal Packet</button>
+<button onclick="pdfDeal()">📄 Generate PDF</button>
+<button class="danger" onclick="resetAll()">RESET DEAL</button>
 </div>
 
 </div>
@@ -91,7 +170,7 @@ display:flex;align-items:center;gap:10px;font-size:12px;margin-top:6px
 <script>
 
 /* =========================
-   FULL COGO MASTER LIST
+   FULL COGO REHAB SYSTEM
 ========================= */
 
 const rehabItems = [
@@ -107,185 +186,133 @@ const rehabItems = [
 ["418","Ceiling Work",0],
 ["752","Closet / Shelves",0],
 ["430","Concrete Material",0],
-["314","Contractor Contingency (10%)",0],
-["382","Curbs / Gutters / Walkways",0],
-["802","Decking / Porch / Patio",0],
 ["384","Demolition",0],
-["492","Downspouts / Gutters",0],
-["388","Driveway",0],
 ["704","Drywall / Tape / Texture",15000],
 ["213","Dumpster",2000],
-["672","Electrical Finish",0],
 ["354","Electrical Labor",8000],
-["680","Electrical Rough",0],
 ["600","Exterior Doors",2500],
-["706","Exterior Painting",0],
-["490","Fascia / Soffit",0],
-["708","Fencing",0],
-["270","Final Clean Up / Staging",0],
-["350","Finish Carpentry",0],
-["744","Finish Hardware",0],
-["400","Finish Labor / Site Work",0],
-["644","Fire Alarms",0],
-["464","Fireplace / Chimney",0],
-["710","Flooring / General",15000],
-["436","Footings / Foundation",0],
+["710","Flooring",15000],
 ["536","Framing Labor",15000],
-["534","Framing Lumber",0],
-["820","Garage",0],
-["602","Garage Door",0],
-["724","Hardwood Floors",0],
 ["650","HVAC",13000],
-["576","Insulation",0],
-["606","Interior Doors",0],
 ["712","Interior Painting",3000],
 ["842","Kitchen",20000],
-["770","Kitchen Appliances",0],
-["530","Kitchen Cabinets",0],
-["702","Kitchen Countertops",0],
-["842B","Kitchen Hardware",0],
-["494","Kitchen Sink",0],
-["398","Landscaping",0],
-["844","Laundry Room",0],
-["646","Light Fixtures",1200],
-["714","Laminate Flooring",0],
-["302","Management Fees",0],
-["466","Masonry / Stone",0],
-["608","Mirrors",0],
-["288","Misc",0],
-["Oil Tank Removal",0],
-["356","Other Labor",0],
+["646","Lighting",1200],
 ["186","Permit Fees",3000],
-["136","Plans",0],
-["642","Plumbing Finish",0],
 ["360","Plumbing Labor",18000],
-["654","Plumbing Rough",0],
-["Pool",0],
-["298","Portable Toilet",0],
-["278","Power Wash",0],
 ["582","Roofing",12000],
-["406","Septic / Sewer",0],
 ["552","Siding",8000],
-["614","Tubs / Toilets / Shower",3000],
-["198","Testing (Lead/Mold)",0],
+["614","Bath Fixtures",3000],
 ["750","Stairs / Railings",1000],
 ["510","Structural",15000],
-["718","Stucco / Plaster",0],
-["324","Temp Utilities",0],
-["720","Tile Work",0],
-["329","Trash Out",0],
-["548","Trusses / Beams",0],
-["416","Wall Work",0],
-["722","Wallpaper",0],
 ["412","Water Heater",1300],
 ["618","Windows",8000]
 ];
 
-/* =========================
-   BUILD UI
-========================= */
+let selected = [];
 
-let rehabTotal = 0;
-
-function build(){
+/* BUILD CHECKLIST */
+function buildRehab(){
 let html="";
 rehabItems.forEach((r,i)=>{
 html+=`
-<div>
-<small>${r[0]} — ${r[1]}</small>
-<input type="number" id="r${i}" value="${r[2]}">
+<div class="itemRow">
+<input type="checkbox" onchange="toggle(${i})">
+<span>${r[1]}</span>
+<input id="c${i}" type="number" value="${r[2]}">
 </div>`;
 });
-document.getElementById("rehabList").innerHTML=html;
+document.getElementById("rehabGrid").innerHTML=html;
 }
-build();
+buildRehab();
 
-/* =========================
-   CALCULATE REHAB
-========================= */
+/* SELECT ITEMS */
+function toggle(i){
+if(selected.includes(i)){
+selected = selected.filter(x=>x!==i);
+}else{
+selected.push(i);
+}
+}
 
+/* CALC REHAB */
 function calcRehab(){
-rehabTotal=0;
+let total=0;
+let report="";
 
-rehabItems.forEach((r,i)=>{
-rehabTotal += parseFloat(document.getElementById("r"+i).value)||0;
+selected.forEach(i=>{
+let val = parseFloat(document.getElementById("c"+i).value)||0;
+total += val;
+report += rehabItems[i][1]+" — $"+val+"\n";
 });
 
-let buffer = document.getElementById("bufferToggle").checked ? rehabTotal*0.1 : 0;
+rehabOut.innerText =
+"TOTAL REHAB: $" + total + "\n\n" + report;
 
-document.getElementById("total").innerText = rehabTotal + buffer;
-
-return rehabTotal + buffer;
+return total;
 }
 
-/* =========================
-   PROPERTY LINKS
-========================= */
-
+/* LINKS */
 function generateLinks(){
 let a = encodeURIComponent(address.value);
 
 links.innerHTML = `
-<a target="_blank" href="https://www.redfin.com/search?q=${a}">Redfin</a> |
-<a target="_blank" href="https://www.zillow.com/homes/${a}_rb/">Zillow</a> |
-<a target="_blank" href="https://www.google.com/search?q=${a}">Google</a>
+<a target="_blank" href="https://www.redfin.com/search?q=${a}">Redfin</a>
+ | <a target="_blank" href="https://www.zillow.com/homes/${a}">Zillow</a>
+ | <a target="_blank" href="https://www.google.com/search?q=${a}">Google</a>
 `;
 }
 
-/* =========================
-   3 TIER STRATEGY
-========================= */
-
+/* UNDERWRITING ENGINE */
 function runStrategy(){
 
-let p = parseFloat(purchase.value)||0;
-let a = parseFloat(arv.value)||0;
+let p = +purchase.value||0;
+let a = +arv.value||0;
 let r = calcRehab();
 
-strategy.innerHTML = `
-Cash Offer (65% ARV): $${(a*0.65).toFixed(0)}<br>
-Refi (70% ARV): $${(a*0.70).toFixed(0)}<br>
-Seller Finance (75% ARV): $${(a*0.75).toFixed(0)}<br><br>
+strategy.innerText = `
+CASH OFFER (65%): $${(a*0.65).toFixed(0)}
+REFI (70%): $${(a*0.70).toFixed(0)}
+SELLER FINANCE (75%): $${(a*0.75).toFixed(0)}
 
-All-In Cost: ${(p+r).toFixed(0)}<br>
-Spread: ${(a-(p+r)).toFixed(0)}
+ALL-IN COST: $${(p+r)}
+SPREAD: $${(a-(p+r))}
 `;
 }
 
-/* =========================
-   EXPORT REHAB
-========================= */
+/* EMAIL */
+function emailDeal(){
+let body = `
+RO'LYFE INSTITUTIONAL DEAL PACKET
 
-function exportRehab(){
-let text="RO'Lyfe COGO Rehab Scope\n\n";
+Address: ${address.value}
+Purchase: ${purchase.value}
+ARV: ${arv.value}
 
-rehabItems.forEach((r,i)=>{
-let v=document.getElementById("r"+i).value;
-if(v>0) text+=`${r[1]}: $${v}\n`;
-});
+REHAB:
+${rehabOut.innerText}
 
-rehabExport.innerText=text;
+UNDERWRITING:
+Cash: ${(arv.value*0.65)}
+Refi: ${(arv.value*0.70)}
+Seller: ${(arv.value*0.75)}
+`;
+
+window.location.href =
+`mailto:richman@rootoflyfe.com?subject=Institutional Deal Packet&body=${encodeURIComponent(body)}`;
 }
 
-/* =========================
-   EMAIL REHAB
-========================= */
-
-function emailRehab(){
-let body=rehabExport.innerText;
-
-window.location.href=
-`mailto:richman@rootoflyfe.com?subject=COGO Rehab Scope&body=${encodeURIComponent(body)}`;
-}
-
-/* =========================
-   PDF
-========================= */
-
-function downloadPDF(){
-let w=window.open();
-w.document.write(`<pre>${rehabExport.innerText}</pre>`);
+/* PDF */
+function pdfDeal(){
+let w = window.open();
+w.document.write("<pre>"+rehabOut.innerText+"</pre>");
 w.print();
+}
+
+/* RESET */
+function resetAll(){
+if(confirm("Reset deal?")){
+location.reload();
+}
 }
 
 </script>
