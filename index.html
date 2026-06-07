@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>RO'Lyfe Institutional Deal Desk OS v2.0</title>
+<title>RO'Lyfe Institutional Deal Desk OS v3.0</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
@@ -16,18 +16,21 @@ color:#fff;
 header{
 position:sticky;
 top:0;
+z-index:10;
 background:#151925;
-padding:14px;
+padding:12px;
 text-align:center;
 font-weight:bold;
-z-index:10;
+font-size:14px;
 }
 
 .container{
 display:flex;
 flex-direction:column;
 gap:12px;
-padding:12px;
+padding:10px;
+max-width:100%;
+box-sizing:border-box;
 }
 
 .card{
@@ -35,16 +38,23 @@ background:#1b2130;
 padding:12px;
 border-radius:10px;
 border:1px solid #2a3440;
+overflow:hidden;
 }
 
-h3{margin:6px 0;color:#00d4ff;font-size:14px}
+h3{
+margin:6px 0;
+color:#00d4ff;
+font-size:14px;
+}
 
-input,select,button{
+/* SAFE MOBILE INPUTS */
+input,select,button,textarea{
 width:100%;
 padding:10px;
 margin:4px 0;
 border-radius:6px;
 border:none;
+box-sizing:border-box;
 font-size:13px;
 }
 
@@ -56,12 +66,16 @@ cursor:pointer;
 
 button.danger{background:#ff4d4d;color:#fff}
 
-.scroll{overflow-x:auto}
+/* SAFE SCROLL TABLE */
+.scroll{
+overflow-x:auto;
+width:100%;
+}
 
 table{
-min-width:900px;
-font-size:10px;
+min-width:700px;
 border-collapse:collapse;
+font-size:10px;
 }
 
 td,th{
@@ -70,42 +84,93 @@ border-bottom:1px solid #333;
 white-space:nowrap;
 }
 
-.green{color:#00ff99}
-.yellow{color:#ffcc00}
-.red{color:#ff4d4d}
-
-.itemRow{
-display:flex;
-align-items:center;
-gap:8px;
-margin:4px 0;
-font-size:12px;
-}
-
-.itemRow span{
-flex:1;
-}
-
-.itemRow input{
-width:90px;
-}
-
 .small{
 font-size:11px;
-opacity:0.7;
+opacity:0.85;
 white-space:pre-wrap;
 background:#0e141b;
 padding:8px;
 border-radius:8px;
 }
+
+/* REHAB LIST */
+.rehabRow{
+display:flex;
+align-items:center;
+gap:6px;
+margin:4px 0;
+font-size:12px;
+}
+
+.rehabRow span{
+flex:1;
+}
+
+/* JAMAL */
+#jamalBtn{
+position:fixed;
+bottom:15px;
+right:15px;
+width:52px;
+height:52px;
+border-radius:50%;
+background:#00d4ff;
+border:none;
+font-size:18px;
+z-index:999;
+}
+
+#jamalBox{
+position:fixed;
+bottom:75px;
+right:15px;
+width:280px;
+height:320px;
+background:#1b2130;
+border:1px solid #333;
+border-radius:10px;
+display:none;
+flex-direction:column;
+z-index:999;
+}
+
+#chat{
+flex:1;
+overflow:auto;
+padding:8px;
+font-size:11px;
+}
+
+#msg{
+width:100%;
+padding:8px;
+border:none;
+}
+
+a{color:#6ee7c9;text-decoration:none}
 </style>
 </head>
 
 <body>
 
-<header>RO'Lyfe OS v2.0 — INSTITUTIONAL UNDERWRITING DESK</header>
+<header>RO'Lyfe DEAL DESK OS v3.0 — FULL INSTITUTIONAL UNDERWRITING</header>
 
 <div class="container">
+
+<!-- APPLICATION GATE -->
+<div class="card">
+<h3>📥 Loan Application Gate (REQUIRED)</h3>
+
+<a href="https://form.jotform.com/261416399941062" target="_blank">
+<button>Open Loan Application</button>
+</a>
+
+<a href="https://form.jotform.com/253154859148062" target="_blank">
+<button>Upload Documents</button>
+</a>
+
+<p class="small">No application = no underwriting review</p>
+</div>
 
 <!-- DEAL INPUT -->
 <div class="card">
@@ -123,196 +188,179 @@ border-radius:8px;
 <option>Direct</option>
 </select>
 
-<select id="stage">
-<option>INTAKE</option>
-<option>UNDERWRITING</option>
-<option>SENT</option>
-<option>NEGOTIATION</option>
-<option>APPROVED</option>
-<option>CLOSED</option>
-</select>
+<button onclick="buildLinks()">🔗 Property Links</button>
 
-<button onclick="generateLinks()">🔗 Property Links</button>
 <div id="links" class="small"></div>
 </div>
 
 <!-- REHAB -->
 <div class="card">
-<h3>🛠 FULL COGO REHAB (INSTITUTIONAL CHECKLIST)</h3>
+<h3>🛠 FULL COGO REHAB (VISIBLE + LOAN OFFICER READY)</h3>
 
-<div id="rehabGrid"></div>
+<div id="rehab"></div>
 
-<button onclick="calcRehab()">Calculate Rehab</button>
+<button onclick="calc()">Calculate Rehab</button>
 
-<div class="small" id="rehabOut">No selection yet</div>
+<div id="rehabOut" class="small">No rehab selected</div>
 </div>
 
 <!-- STRATEGY -->
 <div class="card">
-<h3>📊 Institutional Capital Stack (3-Tier)</h3>
+<h3>📊 3-Tier Capital Stack</h3>
 
-<button onclick="runStrategy()">Run Underwriting</button>
+<button onclick="run()">Run Underwriting</button>
 
 <div id="strategy" class="small"></div>
 </div>
 
 <!-- ACTIONS -->
 <div class="card">
-<h3>⚙️ Export System</h3>
+<h3>⚙️ Export</h3>
 
-<button onclick="emailDeal()">📧 Email Deal Packet</button>
-<button onclick="pdfDeal()">📄 Generate PDF</button>
-<button class="danger" onclick="resetAll()">RESET DEAL</button>
+<button onclick="emailDeal()">📧 Email Deal</button>
+<button onclick="pdf()">📄 PDF</button>
+<button class="danger" onclick="location.reload()">RESET</button>
 </div>
 
+</div>
+
+<!-- JAMAL AI -->
+<button id="jamalBtn" onclick="toggle()">🤖</button>
+
+<div id="jamalBox">
+<div id="chat"></div>
+<input id="msg" placeholder="Ask Jamal..." onkeydown="if(event.key==='Enter')ask()">
 </div>
 
 <script>
 
-/* =========================
-   FULL COGO REHAB SYSTEM
-========================= */
-
-const rehabItems = [
-["264","Architect",0],
-["160","Asphalt & Paving",0],
-["848","Basement",0],
-["740","Bathroom Accessories / Mirror",0],
-["840","Bathroom Tile",0],
-["550","Bathroom Vanity & Countertop",0],
-["841","Bedroom Hardware",0],
-["352","Carpentry Rough",0],
-["700","Carpets",0],
-["418","Ceiling Work",0],
-["752","Closet / Shelves",0],
-["430","Concrete Material",0],
-["384","Demolition",0],
-["704","Drywall / Tape / Texture",15000],
-["213","Dumpster",2000],
-["354","Electrical Labor",8000],
-["600","Exterior Doors",2500],
-["710","Flooring",15000],
-["536","Framing Labor",15000],
-["650","HVAC",13000],
-["712","Interior Painting",3000],
-["842","Kitchen",20000],
-["646","Lighting",1200],
-["186","Permit Fees",3000],
-["360","Plumbing Labor",18000],
-["582","Roofing",12000],
-["552","Siding",8000],
-["614","Bath Fixtures",3000],
-["750","Stairs / Railings",1000],
-["510","Structural",15000],
-["412","Water Heater",1300],
-["618","Windows",8000]
+/* FULL COGO LIST (VISIBLE UNDERWRITING) */
+const items=[
+["Roofing",12000],
+["Kitchen",20000],
+["Plumbing",18000],
+["HVAC",13000],
+["Windows",8000],
+["Siding",8000],
+["Demolition",0],
+["Drywall",15000],
+["Electrical",8000],
+["Framing",15000],
+["Flooring",15000],
+["Painting",3000],
+["Permit Fees",3000],
+["Dumpster",2000],
+["Fixtures",3000],
+["Structural",15000],
+["Lighting",1200],
+["Water Heater",1300],
+["Stairs",1000]
 ];
 
-let selected = [];
+let selected=[];
 
-/* BUILD CHECKLIST */
-function buildRehab(){
+/* BUILD UI */
+function build(){
 let html="";
-rehabItems.forEach((r,i)=>{
+items.forEach((i,index)=>{
 html+=`
-<div class="itemRow">
-<input type="checkbox" onchange="toggle(${i})">
-<span>${r[1]}</span>
-<input id="c${i}" type="number" value="${r[2]}">
+<div class="rehabRow">
+<input type="checkbox" onchange="toggle(${index})">
+<span>${i[0]}</span>
+<input type="number" id="c${index}" value="${i[1]}">
 </div>`;
 });
-document.getElementById("rehabGrid").innerHTML=html;
+rehab.innerHTML=html;
 }
-buildRehab();
+build();
 
-/* SELECT ITEMS */
+/* TOGGLE */
 function toggle(i){
 if(selected.includes(i)){
-selected = selected.filter(x=>x!==i);
+selected=selected.filter(x=>x!==i);
 }else{
 selected.push(i);
 }
 }
 
-/* CALC REHAB */
-function calcRehab(){
+/* CALC */
+function calc(){
 let total=0;
 let report="";
 
 selected.forEach(i=>{
-let val = parseFloat(document.getElementById("c"+i).value)||0;
-total += val;
-report += rehabItems[i][1]+" — $"+val+"\n";
+let v=+document.getElementById("c"+i).value||0;
+total+=v;
+report+=items[i][0]+" — $"+v+"\n";
 });
 
-rehabOut.innerText =
-"TOTAL REHAB: $" + total + "\n\n" + report;
-
-return total;
+rehabOut.innerText=
+"TOTAL REHAB: $"+total+"\n\n"+report;
 }
 
 /* LINKS */
-function generateLinks(){
-let a = encodeURIComponent(address.value);
+function buildLinks(){
+let a=encodeURIComponent(address.value);
 
-links.innerHTML = `
-<a target="_blank" href="https://www.redfin.com/search?q=${a}">Redfin</a>
- | <a target="_blank" href="https://www.zillow.com/homes/${a}">Zillow</a>
- | <a target="_blank" href="https://www.google.com/search?q=${a}">Google</a>
+links.innerHTML=`
+<a target="_blank" href="https://www.redfin.com/search?q=${a}">Redfin</a> |
+<a target="_blank" href="https://www.zillow.com/homes/${a}">Zillow</a> |
+<a target="_blank" href="https://www.google.com/search?q=${a}">Google</a>
 `;
 }
 
-/* UNDERWRITING ENGINE */
-function runStrategy(){
+/* UNDERWRITING */
+function run(){
+let p=+purchase.value||0;
+let a=+arv.value||0;
 
-let p = +purchase.value||0;
-let a = +arv.value||0;
-let r = calcRehab();
+let r=0;
+selected.forEach(i=>{
+r+=+document.getElementById("c"+i).value||0;
+});
 
-strategy.innerText = `
-CASH OFFER (65%): $${(a*0.65).toFixed(0)}
-REFI (70%): $${(a*0.70).toFixed(0)}
-SELLER FINANCE (75%): $${(a*0.75).toFixed(0)}
+strategy.innerText=
+`Cash (65%): $${(a*0.65).toFixed(0)}
+Refi (70%): $${(a*0.70).toFixed(0)}
+Seller (75%): $${(a*0.75).toFixed(0)}
 
-ALL-IN COST: $${(p+r)}
-SPREAD: $${(a-(p+r))}
-`;
+All-in: $${(p+r)}
+Spread: $${(a-(p+r))}`;
 }
 
 /* EMAIL */
 function emailDeal(){
-let body = `
-RO'LYFE INSTITUTIONAL DEAL PACKET
-
-Address: ${address.value}
-Purchase: ${purchase.value}
-ARV: ${arv.value}
-
-REHAB:
-${rehabOut.innerText}
-
-UNDERWRITING:
-Cash: ${(arv.value*0.65)}
-Refi: ${(arv.value*0.70)}
-Seller: ${(arv.value*0.75)}
-`;
-
-window.location.href =
-`mailto:richman@rootoflyfe.com?subject=Institutional Deal Packet&body=${encodeURIComponent(body)}`;
+window.location.href=
+`mailto:richman@rootoflyfe.com?subject=Deal Packet&body=${encodeURIComponent(rehabOut.innerText)}`;
 }
 
 /* PDF */
-function pdfDeal(){
-let w = window.open();
+function pdf(){
+let w=window.open();
 w.document.write("<pre>"+rehabOut.innerText+"</pre>");
 w.print();
 }
 
-/* RESET */
-function resetAll(){
-if(confirm("Reset deal?")){
-location.reload();
+/* JAMAL */
+function toggle(){
+jamalBox.style.display=
+jamalBox.style.display==="flex"?"none":"flex";
+jamalBox.style.flexDirection="column";
 }
+
+function ask(){
+let q=msg.value.toLowerCase();
+chat.innerHTML+=`<div><b>You:</b> ${q}</div>`;
+
+let r="Ask about deals, rehab, or spreads.";
+
+if(q.includes("deal")) r="Check spread first. Then rehab accuracy.";
+if(q.includes("rehab")) r="Rehab controls profit — never estimate blind.";
+if(q.includes("money")) r="Money follows structure, not emotion.";
+
+chat.innerHTML+=`<div><b>Jamal:</b> ${r}</div>`;
+msg.value="";
+chat.scrollTop=chat.scrollHeight;
 }
 
 </script>
