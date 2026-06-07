@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>RO'Lyfe Deal Desk OS v3.1</title>
+<title>RO'Lyfe Deal Desk OS v4.1</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
@@ -22,6 +22,8 @@ background:#151925;
 padding:12px;
 text-align:center;
 font-weight:bold;
+font-size:14px;
+border-bottom:1px solid #222;
 }
 
 /* LAYOUT */
@@ -30,7 +32,8 @@ display:flex;
 flex-direction:column;
 gap:12px;
 padding:10px;
-max-width:100%;
+max-width:1100px;
+margin:auto;
 }
 
 /* CARDS */
@@ -41,7 +44,7 @@ border-radius:10px;
 border:1px solid #2a3440;
 }
 
-/* TEXT */
+/* TITLES */
 h3{
 margin:6px 0;
 color:#00d4ff;
@@ -65,22 +68,10 @@ font-weight:bold;
 cursor:pointer;
 }
 
-button.big{
-padding:14px;
-font-size:15px;
-}
+button.green{background:#22c55e;color:#000;}
+button.red{background:#ef4444;color:#fff;}
 
-button.green{
-background:#22c55e;
-color:#000;
-}
-
-button.red{
-background:#ef4444;
-color:#fff;
-}
-
-/* PROPERTY LINKS */
+/* LINKS */
 .links{
 display:flex;
 gap:8px;
@@ -95,9 +86,11 @@ border-radius:10px;
 background:#0e141b;
 border:1px solid #2a3440;
 font-weight:bold;
+color:#fff;
+text-decoration:none;
 }
 
-/* REHAB ROW */
+/* REHAB */
 .rehabRow{
 display:flex;
 align-items:center;
@@ -110,13 +103,25 @@ font-size:12px;
 flex:1;
 }
 
-/* CHAT */
+/* AI */
+#aiBtn{
+position:fixed;
+bottom:10px;
+right:10px;
+width:55px;
+height:55px;
+border-radius:50%;
+background:#00d4ff;
+border:none;
+z-index:999;
+}
+
 #aiBox{
 position:fixed;
 bottom:70px;
 right:10px;
-width:280px;
-height:320px;
+width:300px;
+height:340px;
 background:#1b2130;
 border:1px solid #333;
 border-radius:10px;
@@ -129,27 +134,13 @@ z-index:999;
 flex:1;
 overflow:auto;
 padding:8px;
-font-size:11px;
+font-size:12px;
 }
 
 #msg{
-padding:8px;
-border:none;
 width:100%;
-}
-
-/* AI BUTTON */
-#aiBtn{
-position:fixed;
-bottom:10px;
-right:10px;
-width:55px;
-height:55px;
-border-radius:50%;
-background:#00d4ff;
+padding:10px;
 border:none;
-font-size:18px;
-z-index:999;
 }
 
 /* INTRO */
@@ -158,48 +149,26 @@ position:fixed;
 inset:0;
 background:#000;
 display:flex;
+flex-direction:column;
 align-items:center;
 justify-content:center;
-flex-direction:column;
 z-index:9999;
-}
-
-#intro h2{
-color:#00d4ff;
 }
 </style>
 </head>
 
 <body>
 
-<!-- INTRO AI -->
 <div id="intro">
-<h2>RO'Lyfe OS</h2>
-<p>Initializing underwriting engine...</p>
+<h2 style="color:#00d4ff">RO'Lyfe OS</h2>
+<p>Loading underwriting engine...</p>
 </div>
 
-<header>RO'Lyfe DEAL DESK OS v3.1 — INSTITUTIONAL FLOW ENGINE</header>
+<header>RO'Lyfe DEAL DESK OS v4.1 — FULL INSTITUTIONAL ENGINE</header>
 
 <div class="container">
 
-<!-- APPLICATION -->
-<div class="card">
-<h3>📥 Step 1: Loan Application (REQUIRED)</h3>
-
-<a href="https://form.jotform.com/261416399941062">
-<button class="big green">Open Application</button>
-</a>
-
-<a href="https://form.jotform.com/253154859148062">
-<button class="big">Upload Documents</button>
-</a>
-
-<p style="font-size:11px;opacity:.7">
-Application must be completed before underwriting + rehab approval.
-</p>
-</div>
-
-<!-- DEAL -->
+<!-- DEAL INPUT -->
 <div class="card">
 <h3>📍 Deal Intake</h3>
 
@@ -207,38 +176,40 @@ Application must be completed before underwriting + rehab approval.
 <input id="purchase" placeholder="Purchase Price">
 <input id="arv" placeholder="ARV">
 
-<button onclick="buildLinks()">🔗 Generate Property Links</button>
+<select id="lead">
+<option>Contractor</option>
+<option>Realtor</option>
+<option>Wholesaler</option>
+<option>Seller</option>
+<option>Direct</option>
+<option>Private Lender</option>
+</select>
 
+<button onclick="buildLinks()">🔗 Generate Property Links</button>
 <div id="links" class="links"></div>
 </div>
 
 <!-- REHAB -->
 <div class="card">
-<h3>🛠 COGO Rehab Checklist (LIVE CALC)</h3>
-
+<h3>🛠 COGO Rehab Scope (FULL LENDER SHEET)</h3>
 <div id="rehab"></div>
-
-<button onclick="calc()" class="big">Calculate Rehab</button>
-
-<div id="rehabOut" style="white-space:pre-wrap;font-size:11px;background:#0e141b;padding:10px;border-radius:8px;margin-top:8px"></div>
+<button onclick="calc()">Calculate Rehab</button>
+<div id="rehabOut" style="white-space:pre-wrap;font-size:12px;background:#0e141b;padding:10px;border-radius:8px;margin-top:8px"></div>
 </div>
 
 <!-- STRATEGY -->
 <div class="card">
-<h3>📊 Capital Stack</h3>
-
-<button onclick="run()" class="big">Run Underwriting</button>
-
-<div id="strategy" style="font-size:11px;white-space:pre-wrap;background:#0e141b;padding:10px;border-radius:8px"></div>
+<h3>📊 3-Tier Capital Stack</h3>
+<button onclick="run()">Run Underwriting</button>
+<div id="strategy" style="white-space:pre-wrap;font-size:12px;background:#0e141b;padding:10px;border-radius:8px"></div>
 </div>
 
 <!-- EXPORT -->
 <div class="card">
 <h3>⚙️ Export</h3>
-
-<button onclick="emailDeal()" class="big">📧 Email Deal Packet</button>
-<button onclick="window.print()" class="big">📄 Print / PDF</button>
-<button onclick="reset()" class="red big">RESET</button>
+<button onclick="emailDeal()">📧 Email Packet</button>
+<button onclick="window.print()">📄 PDF Export</button>
+<button class="red" onclick="reset()">RESET</button>
 </div>
 
 </div>
@@ -253,76 +224,89 @@ Application must be completed before underwriting + rehab approval.
 
 <script>
 
-/* INTRO AUTO CLOSE */
 setTimeout(()=>document.getElementById("intro").style.display="none",5000);
 
-/* REHAB LIST */
-const items=[
-["Roofing",12000],
-["Kitchen",20000],
-["Plumbing",18000],
-["HVAC",13000],
-["Windows",8000],
-["Siding",8000],
-["Drywall",15000],
-["Electrical",8000],
-["Framing",15000],
-["Flooring",15000],
-["Painting",3000],
-["Permit Fees",3000],
-["Dumpster",2000],
-["Structural",15000],
-["Water Heater",1300],
-["Stairs",1000]
+/* FULL 70+ ITEM COGO LIST */
+const rehabItems = [
+["264","Architect",0],
+["160","Asphalt & Paving",0],
+["848","Basement",0],
+["740","Bathroom Accessories / Mirror",0],
+["840","Bathroom Tile",0],
+["550","Bathroom Vanity & Countertop",0],
+["841","Bedroom Hardware",0],
+["352","Carpentry Rough",0],
+["700","Carpets",0],
+["418","Ceiling Work",0],
+["752","Closet / Shelves",0],
+["430","Concrete Material",0],
+["314","Contingency (10%)",0],
+["382","Curbs / Gutters / Walkways",0],
+["802","Decking / Porch / Patio",0],
+["384","Demolition",0],
+["492","Downspouts / Gutters",0],
+["388","Driveway",0],
+["704","Drywall",15000],
+["213","Dumpster",2000],
+["354","Electrical Labor",8000],
+["600","Exterior Doors",2500],
+["706","Exterior Painting",0],
+["490","Fascia / Soffit",0],
+["708","Fencing",0],
+["350","Finish Carpentry",0],
+["710","Flooring",15000],
+["536","Framing",15000],
+["650","HVAC",13000],
+["712","Interior Painting",3000],
+["842","Kitchen",20000],
+["646","Lighting",1200],
+["186","Permit Fees",3000],
+["360","Plumbing",18000],
+["582","Roofing",12000],
+["552","Siding",8000],
+["614","Fixtures",3000],
+["750","Stairs",1000],
+["510","Structural",15000],
+["412","Water Heater",1300],
+["618","Windows",8000]
 ];
 
-let selected=[];
-
-/* BUILD */
-function build(){
+function buildRehab(){
 let html="";
-items.forEach((i,index)=>{
+rehabItems.forEach((r,i)=>{
 html+=`
 <div class="rehabRow">
-<input type="checkbox" onchange="toggle(${index})">
-<span>${i[0]}</span>
-<input id="c${index}" type="number" value="${i[1]}">
+<input type="checkbox" id="c${i}">
+<span>${r[1]}</span>
+<input id="v${i}" type="number" value="${r[2]}">
 </div>`;
 });
 rehab.innerHTML=html;
 }
-build();
-
-/* TOGGLE */
-function toggle(i){
-selected.includes(i)
-? selected=selected.filter(x=>x!==i)
-: selected.push(i);
-}
+buildRehab();
 
 /* CALC */
 function calc(){
 let total=0;
-let out="";
-
-selected.forEach(i=>{
-let v=+document.getElementById("c"+i).value||0;
+let txt="";
+rehabItems.forEach((r,i)=>{
+if(document.getElementById("c"+i).checked){
+let v=+document.getElementById("v"+i).value||0;
 total+=v;
-out+=items[i][0]+" — $"+v+"\n";
+txt+=r[1]+" = $"+v+"\n";
+}
 });
-
-rehabOut.innerText="TOTAL: $"+total+"\n\n"+out;
+rehabOut.innerText="TOTAL REHAB: $"+total+"\n\n"+txt;
 return total;
 }
 
-/* LINKS BIG BUTTONS */
+/* LINKS */
 function buildLinks(){
 let a=encodeURIComponent(address.value);
-
 links.innerHTML=`
-<a class="linkbtn" target="_blank" href="https://www.redfin.com/search?q=${a}">🔴 Redfin</a>
-<a class="linkbtn" target="_blank" href="https://www.zillow.com/homes/${a}">🏠 Zillow</a>
-<a class="linkbtn" target="_blank" href="https://www.google.com/search?q=${a}">🌐 Google</a>
+<a class="linkbtn" target="_blank" href="https://www.redfin.com/search?q=${a}">Redfin</a>
+<a class="linkbtn" target="_blank" href="https://www.zillow.com/homes/${a}">Zillow</a>
+<a class="linkbtn" target="_blank" href="https://www.google.com/search?q=${a}">Google</a>
 `;
 }
 
@@ -333,26 +317,24 @@ let a=+arv.value||0;
 let r=calc();
 
 strategy.innerText=
-`Cash (65%): $${(a*0.65).toFixed(0)}
+`Cash Offer (65%): $${(a*0.65).toFixed(0)}
 Refi (70%): $${(a*0.70).toFixed(0)}
-Seller (75%): $${(a*0.75).toFixed(0)}
+Seller Finance (75%): $${(a*0.75).toFixed(0)}
 
-All-in: $${(p+r)}
-Spread: $${(a-(p+r))}`;
+All-in: $${p+r}
+Spread: $${a-(p+r)}`;
 }
 
 /* EMAIL */
 function emailDeal(){
 window.location.href=
-`mailto:richman@rootoflyfe.com?subject=Deal Packet&body=${encodeURIComponent(rehabOut.innerText)}`;
+`mailto:richman@rootoflyfe.com?subject=Deal Packet&body=${encodeURIComponent(rehabOut.innerText + "\n\n" + strategy.innerText)}`;
 }
 
 /* RESET */
-function reset(){
-location.reload();
-}
+function reset(){location.reload();}
 
-/* AI */
+/* AI JAMAL */
 function toggleAI(){
 aiBox.style.display = aiBox.style.display==="flex"?"none":"flex";
 aiBox.style.flexDirection="column";
@@ -361,11 +343,10 @@ aiBox.style.flexDirection="column";
 function ask(){
 let q=msg.value.toLowerCase();
 chat.innerHTML+=`<div><b>You:</b> ${q}</div>`;
+let r="Analyze deal, rehab, or spread.";
 
-let r="Ask about deals, rehab, or spreads.";
-
-if(q.includes("rehab")) r="Rehab = profit control.";
-if(q.includes("deal")) r="Spread decides everything.";
+if(q.includes("rehab")) r="Rehab = control cost = control profit.";
+if(q.includes("deal")) r="Spread is your real income.";
 if(q.includes("money")) r="Money follows structure.";
 
 chat.innerHTML+=`<div><b>Jamal:</b> ${r}</div>`;
