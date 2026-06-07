@@ -1,360 +1,232 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
 <meta charset="UTF-8">
-<title>RO'Lyfe Deal Desk OS v4.1</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+<title>RO'Lyfe Holdings LLC | Deal Desk OS v5.0</title>
+
 <style>
-body{
+
+*{
 margin:0;
-font-family:Arial;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+}
+
+body{
 background:#0f1115;
-color:#fff;
+color:white;
 }
 
 /* HEADER */
+
 header{
+background:#111827;
+padding:15px;
+border-bottom:1px solid #222;
 position:sticky;
 top:0;
-z-index:10;
-background:#151925;
-padding:12px;
-text-align:center;
+z-index:999;
+}
+
+.logo{
+font-size:24px;
 font-weight:bold;
-font-size:14px;
-border-bottom:1px solid #222;
-}
-
-/* LAYOUT */
-.container{
-display:flex;
-flex-direction:column;
-gap:12px;
-padding:10px;
-max-width:1100px;
-margin:auto;
-}
-
-/* CARDS */
-.card{
-background:#1b2130;
-padding:12px;
-border-radius:10px;
-border:1px solid #2a3440;
-}
-
-/* TITLES */
-h3{
-margin:6px 0;
 color:#00d4ff;
-font-size:14px;
 }
 
-/* INPUTS */
-input,select,button{
-width:100%;
-padding:12px;
-margin:4px 0;
-border:none;
+.tagline{
+font-size:12px;
+opacity:.8;
+margin-top:4px;
+}
+
+/* NAV */
+
+nav{
+display:flex;
+flex-wrap:wrap;
+gap:10px;
+margin-top:10px;
+}
+
+nav a{
+text-decoration:none;
+color:white;
+background:#1f2937;
+padding:10px 14px;
 border-radius:8px;
 font-size:14px;
-box-sizing:border-box;
 }
 
-button{
-background:#00d4ff;
-font-weight:bold;
-cursor:pointer;
-}
+/* HERO */
 
-button.green{background:#22c55e;color:#000;}
-button.red{background:#ef4444;color:#fff;}
-
-/* LINKS */
-.links{
-display:flex;
-gap:8px;
-flex-wrap:wrap;
-}
-
-.linkbtn{
-flex:1;
+.hero{
+padding:50px 20px;
 text-align:center;
-padding:10px;
-border-radius:10px;
-background:#0e141b;
-border:1px solid #2a3440;
+background:
+linear-gradient(
+135deg,
+#111827,
+#0f172a
+);
+}
+
+.hero h1{
+font-size:40px;
+color:#00d4ff;
+margin-bottom:15px;
+}
+
+.hero p{
+max-width:900px;
+margin:auto;
+line-height:1.6;
+opacity:.9;
+}
+
+/* BUTTONS */
+
+.btn{
+display:inline-block;
+margin:8px;
+padding:14px 24px;
+background:#00d4ff;
+color:black;
 font-weight:bold;
-color:#fff;
+border-radius:10px;
 text-decoration:none;
 }
 
-/* REHAB */
-.rehabRow{
-display:flex;
-align-items:center;
-gap:8px;
-margin:6px 0;
-font-size:12px;
+.btnGreen{
+background:#22c55e;
 }
 
-.rehabRow span{
-flex:1;
+.btnGold{
+background:#fbbf24;
 }
 
-/* AI */
-#aiBtn{
-position:fixed;
-bottom:10px;
-right:10px;
-width:55px;
-height:55px;
-border-radius:50%;
-background:#00d4ff;
-border:none;
-z-index:999;
-}
+/* SECTION */
 
-#aiBox{
-position:fixed;
-bottom:70px;
-right:10px;
-width:300px;
-height:340px;
+.section{
+padding:25px;
+margin:20px;
 background:#1b2130;
-border:1px solid #333;
+border-radius:12px;
+border:1px solid #2a3440;
+}
+
+.section h2{
+color:#00d4ff;
+margin-bottom:15px;
+}
+
+.grid{
+display:grid;
+grid-template-columns:
+repeat(auto-fit,minmax(250px,1fr));
+gap:15px;
+}
+
+.card{
+background:#111827;
+padding:15px;
 border-radius:10px;
-display:none;
-flex-direction:column;
-z-index:999;
+border:1px solid #2a3440;
 }
 
-#chat{
-flex:1;
-overflow:auto;
-padding:8px;
-font-size:12px;
+.card h3{
+margin-bottom:10px;
+color:#00d4ff;
 }
 
-#msg{
-width:100%;
-padding:10px;
-border:none;
+footer{
+padding:30px;
+text-align:center;
+background:#111827;
+margin-top:30px;
 }
 
-/* INTRO */
-#intro{
-position:fixed;
-inset:0;
-background:#000;
-display:flex;
-flex-direction:column;
-align-items:center;
-justify-content:center;
-z-index:9999;
-}
 </style>
+
 </head>
 
 <body>
 
-<div id="intro">
-<h2 style="color:#00d4ff">RO'Lyfe OS</h2>
-<p>Loading underwriting engine...</p>
+<header>
+
+<div class="logo">
+RO'Lyfe Holdings LLC
 </div>
 
-<header>RO'Lyfe DEAL DESK OS v4.1 — FULL INSTITUTIONAL ENGINE</header>
-
-<div class="container">
-
-<!-- DEAL INPUT -->
-<div class="card">
-<h3>📍 Deal Intake</h3>
-
-<input id="address" placeholder="Property Address">
-<input id="purchase" placeholder="Purchase Price">
-<input id="arv" placeholder="ARV">
-
-<select id="lead">
-<option>Contractor</option>
-<option>Realtor</option>
-<option>Wholesaler</option>
-<option>Seller</option>
-<option>Direct</option>
-<option>Private Lender</option>
-</select>
-
-<button onclick="buildLinks()">🔗 Generate Property Links</button>
-<div id="links" class="links"></div>
+<div class="tagline">
+Real Estate • Business Funding • Private Capital • Credit Solutions
 </div>
 
-<!-- REHAB -->
-<div class="card">
-<h3>🛠 COGO Rehab Scope (FULL LENDER SHEET)</h3>
-<div id="rehab"></div>
-<button onclick="calc()">Calculate Rehab</button>
-<div id="rehabOut" style="white-space:pre-wrap;font-size:12px;background:#0e141b;padding:10px;border-radius:8px;margin-top:8px"></div>
-</div>
+<nav>
 
-<!-- STRATEGY -->
-<div class="card">
-<h3>📊 3-Tier Capital Stack</h3>
-<button onclick="run()">Run Underwriting</button>
-<div id="strategy" style="white-space:pre-wrap;font-size:12px;background:#0e141b;padding:10px;border-radius:8px"></div>
-</div>
+<a href="deal-desk/">Deal Desk</a>
 
-<!-- EXPORT -->
-<div class="card">
-<h3>⚙️ Export</h3>
-<button onclick="emailDeal()">📧 Email Packet</button>
-<button onclick="window.print()">📄 PDF Export</button>
-<button class="red" onclick="reset()">RESET</button>
-</div>
+<a href="funding/">Funding</a>
 
-</div>
+<a href="rehab/">Rehab</a>
 
-<!-- AI -->
-<button id="aiBtn" onclick="toggleAI()">🤖</button>
+<a href="investor-packet/">Investor Packet</a>
 
-<div id="aiBox">
-<div id="chat"></div>
-<input id="msg" placeholder="Ask Jamal..." onkeydown="if(event.key==='Enter')ask()">
-</div>
+<a href="market-terminal/">Market Terminal</a>
 
-<script>
+<a href="media/">Media</a>
 
-setTimeout(()=>document.getElementById("intro").style.display="none",5000);
+<a href="tools/">Tools</a>
 
-/* FULL 70+ ITEM COGO LIST */
-const rehabItems = [
-["264","Architect",0],
-["160","Asphalt & Paving",0],
-["848","Basement",0],
-["740","Bathroom Accessories / Mirror",0],
-["840","Bathroom Tile",0],
-["550","Bathroom Vanity & Countertop",0],
-["841","Bedroom Hardware",0],
-["352","Carpentry Rough",0],
-["700","Carpets",0],
-["418","Ceiling Work",0],
-["752","Closet / Shelves",0],
-["430","Concrete Material",0],
-["314","Contingency (10%)",0],
-["382","Curbs / Gutters / Walkways",0],
-["802","Decking / Porch / Patio",0],
-["384","Demolition",0],
-["492","Downspouts / Gutters",0],
-["388","Driveway",0],
-["704","Drywall",15000],
-["213","Dumpster",2000],
-["354","Electrical Labor",8000],
-["600","Exterior Doors",2500],
-["706","Exterior Painting",0],
-["490","Fascia / Soffit",0],
-["708","Fencing",0],
-["350","Finish Carpentry",0],
-["710","Flooring",15000],
-["536","Framing",15000],
-["650","HVAC",13000],
-["712","Interior Painting",3000],
-["842","Kitchen",20000],
-["646","Lighting",1200],
-["186","Permit Fees",3000],
-["360","Plumbing",18000],
-["582","Roofing",12000],
-["552","Siding",8000],
-["614","Fixtures",3000],
-["750","Stairs",1000],
-["510","Structural",15000],
-["412","Water Heater",1300],
-["618","Windows",8000]
-];
+<a href="docs/">Docs</a>
 
-function buildRehab(){
-let html="";
-rehabItems.forEach((r,i)=>{
-html+=`
-<div class="rehabRow">
-<input type="checkbox" id="c${i}">
-<span>${r[1]}</span>
-<input id="v${i}" type="number" value="${r[2]}">
-</div>`;
-});
-rehab.innerHTML=html;
-}
-buildRehab();
+</nav>
 
-/* CALC */
-function calc(){
-let total=0;
-let txt="";
-rehabItems.forEach((r,i)=>{
-if(document.getElementById("c"+i).checked){
-let v=+document.getElementById("v"+i).value||0;
-total+=v;
-txt+=r[1]+" = $"+v+"\n";
-}
-});
-rehabOut.innerText="TOTAL REHAB: $"+total+"\n\n"+txt;
-return total;
-}
+</header>
 
-/* LINKS */
-function buildLinks(){
-let a=encodeURIComponent(address.value);
-links.innerHTML=`
-<a class="linkbtn" target="_blank" href="https://www.redfin.com/search?q=${a}">Redfin</a>
-<a class="linkbtn" target="_blank" href="https://www.zillow.com/homes/${a}">Zillow</a>
-<a class="linkbtn" target="_blank" href="https://www.google.com/search?q=${a}">Google</a>
-`;
-}
+<section class="hero">
 
-/* UNDERWRITING */
-function run(){
-let p=+purchase.value||0;
-let a=+arv.value||0;
-let r=calc();
+<h1>
+RO'Lyfe Deal Desk OS v5.0
+</h1>
 
-strategy.innerText=
-`Cash Offer (65%): $${(a*0.65).toFixed(0)}
-Refi (70%): $${(a*0.70).toFixed(0)}
-Seller Finance (75%): $${(a*0.75).toFixed(0)}
+<p>
 
-All-in: $${p+r}
-Spread: $${a-(p+r)}`;
-}
+Welcome to the RO'Lyfe Holdings ecosystem.
 
-/* EMAIL */
-function emailDeal(){
-window.location.href=
-`mailto:richman@rootoflyfe.com?subject=Deal Packet&body=${encodeURIComponent(rehabOut.innerText + "\n\n" + strategy.innerText)}`;
-}
+This platform helps borrowers, investors, contractors, realtors, wholesalers, and business owners analyze deals, access funding, build investor packets, estimate rehabs, and prepare files for underwriting review.
 
-/* RESET */
-function reset(){location.reload();}
+Powered by Atlas AI.
 
-/* AI JAMAL */
-function toggleAI(){
-aiBox.style.display = aiBox.style.display==="flex"?"none":"flex";
-aiBox.style.flexDirection="column";
-}
+</p>
 
-function ask(){
-let q=msg.value.toLowerCase();
-chat.innerHTML+=`<div><b>You:</b> ${q}</div>`;
-let r="Analyze deal, rehab, or spread.";
+<br>
 
-if(q.includes("rehab")) r="Rehab = control cost = control profit.";
-if(q.includes("deal")) r="Spread is your real income.";
-if(q.includes("money")) r="Money follows structure.";
+<a class="btn btnGreen"
+href="https://form.jotform.com/261416399941062"
+target="_blank">
 
-chat.innerHTML+=`<div><b>Jamal:</b> ${r}</div>`;
-msg.value="";
-chat.scrollTop=chat.scrollHeight;
-}
+Apply Now
 
-</script>
+</a>
 
-</body>
-</html>
+<a class="btn"
+href="https://form.jotform.com/253154859148062"
+target="_blank">
+
+Upload Documents
+
+</a>
+
+<a class="btn btnGold"
+href="deal-desk/">
+
+Open Deal Desk
+
+</a>
+
+</section>
