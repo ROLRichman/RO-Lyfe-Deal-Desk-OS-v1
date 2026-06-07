@@ -2,23 +2,29 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>RO'Lyfe Deal Desk OS v1.5</title>
+<title>RO'Lyfe Deal Desk OS v1.6</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-body{margin:0;font-family:Arial;background:#0f1115;color:#fff;}
+body{margin:0;font-family:Arial;background:#0f1115;color:#fff}
 header{padding:14px;background:#151925;text-align:center;font-weight:bold;position:sticky;top:0}
 
 .container{display:flex;flex-direction:column;gap:12px;padding:12px}
 
 .card{background:#1b2130;padding:12px;border-radius:10px}
 
-input,select,button{width:100%;padding:10px;margin:4px 0;border:none;border-radius:6px}
+h3{color:#00d4ff;margin:6px 0}
+
+input,select,button{
+width:100%;padding:10px;margin:4px 0;border-radius:6px;border:none;font-size:13px
+}
 
 button{background:#00d4ff;font-weight:bold;cursor:pointer}
-button.danger{background:#ff4d4d;color:#fff}
+
+.small{font-size:11px;opacity:0.7}
 
 .scroll{overflow-x:auto}
+
 table{min-width:900px;font-size:10px;border-collapse:collapse}
 td,th{padding:6px;border-bottom:1px solid #333;white-space:nowrap}
 
@@ -26,15 +32,15 @@ td,th{padding:6px;border-bottom:1px solid #333;white-space:nowrap}
 .yellow{color:#ffcc00}
 .red{color:#ff4d4d}
 
-.rehabBox{background:#0e141b;padding:10px;border-radius:8px;margin-top:8px;font-size:11px}
-
-a{color:#6ee7c9}
+.toggle{
+display:flex;align-items:center;gap:10px;font-size:12px;margin-top:6px
+}
 </style>
 </head>
 
 <body>
 
-<header>RO'Lyfe DEAL DESK OS v1.5 — FULL MONEY ENGINE</header>
+<header>RO'Lyfe OS v1.6 — FULL COGO REHAB ENGINE</header>
 
 <div class="container">
 
@@ -46,169 +52,240 @@ a{color:#6ee7c9}
 <input id="purchase" placeholder="Purchase Price">
 <input id="arv" placeholder="ARV">
 
-<select id="lead">
-<option>Contractor</option>
-<option>Realtor</option>
-<option>Wholesaler</option>
-<option>Seller</option>
-<option>Direct</option>
-</select>
-
-<select id="stage">
-<option>INTAKE</option>
-<option>UNDERWRITING</option>
-<option>SENT</option>
-<option>NEGOTIATION</option>
-<option>APPROVED</option>
-<option>CLOSED</option>
-</select>
-
-<button onclick="buildLinks()">🔗 Generate Property Links</button>
-
-<div id="links"></div>
-
+<div class="toggle">
+<input type="checkbox" id="bufferToggle">
+<label>Apply 10% Rehab Buffer</label>
 </div>
 
-<!-- COGO REHAB -->
-<div class="card">
-<h3>🛠 Rehab Scope (VISIBLE + REQUIRED)</h3>
+<button onclick="generateLinks()">🔗 Open Property Links</button>
+<div id="links"></div>
+</div>
 
-<textarea id="rehabInput" rows="6" placeholder="Enter rehab items line by line:
-Roof 12000
-Kitchen 20000
-Plumbing 18000"></textarea>
+<!-- REHAB ENGINE -->
+<div class="card">
+<h3>🛠 COGO Rehab Scope (FULL LIST)</h3>
+
+<div id="rehabList"></div>
 
 <button onclick="calcRehab()">Calculate Rehab</button>
 
-<div id="rehabOut" class="rehabBox">No rehab entered</div>
-</div>
+<p><b>Total Rehab:</b> $<span id="total">0</span></p>
 
-<!-- 3 TIER STRATEGY -->
-<div class="card">
-<h3>📊 3-Tier Strategy Engine</h3>
+<div id="rehabExport" class="small"></div>
 
-<button onclick="calcStrategy()">Run Strategy</button>
-
-<div id="strategy"></div>
-</div>
-
-<!-- ACTIONS -->
-<div class="card">
-<h3>⚙️ Actions</h3>
-
-<button onclick="generatePacket()">📄 Investor Packet</button>
-<button onclick="emailDeal()">📧 Email Deal</button>
+<button onclick="exportRehab()">📄 Export Rehab Scope</button>
+<button onclick="emailRehab()">📧 Email Rehab</button>
 <button onclick="downloadPDF()">⬇ PDF</button>
-<button class="danger" onclick="resetAll()">RESET</button>
+
+</div>
+
+<!-- STRATEGY -->
+<div class="card">
+<h3>📊 3-Tier Strategy</h3>
+<button onclick="runStrategy()">Run Analysis</button>
+<div id="strategy"></div>
 </div>
 
 </div>
 
 <script>
 
+/* =========================
+   FULL COGO MASTER LIST
+========================= */
+
+const rehabItems = [
+["264","Architect",0],
+["160","Asphalt & Paving",0],
+["848","Basement",0],
+["740","Bathroom Accessories / Mirror",0],
+["840","Bathroom Tile",0],
+["550","Bathroom Vanity & Countertop",0],
+["841","Bedroom Hardware",0],
+["352","Carpentry Rough",0],
+["700","Carpets",0],
+["418","Ceiling Work",0],
+["752","Closet / Shelves",0],
+["430","Concrete Material",0],
+["314","Contractor Contingency (10%)",0],
+["382","Curbs / Gutters / Walkways",0],
+["802","Decking / Porch / Patio",0],
+["384","Demolition",0],
+["492","Downspouts / Gutters",0],
+["388","Driveway",0],
+["704","Drywall / Tape / Texture",15000],
+["213","Dumpster",2000],
+["672","Electrical Finish",0],
+["354","Electrical Labor",8000],
+["680","Electrical Rough",0],
+["600","Exterior Doors",2500],
+["706","Exterior Painting",0],
+["490","Fascia / Soffit",0],
+["708","Fencing",0],
+["270","Final Clean Up / Staging",0],
+["350","Finish Carpentry",0],
+["744","Finish Hardware",0],
+["400","Finish Labor / Site Work",0],
+["644","Fire Alarms",0],
+["464","Fireplace / Chimney",0],
+["710","Flooring / General",15000],
+["436","Footings / Foundation",0],
+["536","Framing Labor",15000],
+["534","Framing Lumber",0],
+["820","Garage",0],
+["602","Garage Door",0],
+["724","Hardwood Floors",0],
+["650","HVAC",13000],
+["576","Insulation",0],
+["606","Interior Doors",0],
+["712","Interior Painting",3000],
+["842","Kitchen",20000],
+["770","Kitchen Appliances",0],
+["530","Kitchen Cabinets",0],
+["702","Kitchen Countertops",0],
+["842B","Kitchen Hardware",0],
+["494","Kitchen Sink",0],
+["398","Landscaping",0],
+["844","Laundry Room",0],
+["646","Light Fixtures",1200],
+["714","Laminate Flooring",0],
+["302","Management Fees",0],
+["466","Masonry / Stone",0],
+["608","Mirrors",0],
+["288","Misc",0],
+["Oil Tank Removal",0],
+["356","Other Labor",0],
+["186","Permit Fees",3000],
+["136","Plans",0],
+["642","Plumbing Finish",0],
+["360","Plumbing Labor",18000],
+["654","Plumbing Rough",0],
+["Pool",0],
+["298","Portable Toilet",0],
+["278","Power Wash",0],
+["582","Roofing",12000],
+["406","Septic / Sewer",0],
+["552","Siding",8000],
+["614","Tubs / Toilets / Shower",3000],
+["198","Testing (Lead/Mold)",0],
+["750","Stairs / Railings",1000],
+["510","Structural",15000],
+["718","Stucco / Plaster",0],
+["324","Temp Utilities",0],
+["720","Tile Work",0],
+["329","Trash Out",0],
+["548","Trusses / Beams",0],
+["416","Wall Work",0],
+["722","Wallpaper",0],
+["412","Water Heater",1300],
+["618","Windows",8000]
+];
+
+/* =========================
+   BUILD UI
+========================= */
+
 let rehabTotal = 0;
 
-/* REHAB CALC (VISIBLE FIX) */
-function calcRehab(){
-
-let lines = rehabInput.value.trim().split("\n");
-let html = "";
-rehabTotal = 0;
-
-lines.forEach(l=>{
-let parts = l.split(" ");
-let cost = parseFloat(parts.pop())||0;
-let name = parts.join(" ");
-
-if(name){
-rehabTotal += cost;
-html += `<div>${name} — $${cost}</div>`;
+function build(){
+let html="";
+rehabItems.forEach((r,i)=>{
+html+=`
+<div>
+<small>${r[0]} — ${r[1]}</small>
+<input type="number" id="r${i}" value="${r[2]}">
+</div>`;
+});
+document.getElementById("rehabList").innerHTML=html;
 }
+build();
+
+/* =========================
+   CALCULATE REHAB
+========================= */
+
+function calcRehab(){
+rehabTotal=0;
+
+rehabItems.forEach((r,i)=>{
+rehabTotal += parseFloat(document.getElementById("r"+i).value)||0;
 });
 
-rehabOut.innerHTML = `
-<b>Total Rehab:</b> $${rehabTotal}<br><br>
-${html}
-`;
+let buffer = document.getElementById("bufferToggle").checked ? rehabTotal*0.1 : 0;
+
+document.getElementById("total").innerText = rehabTotal + buffer;
+
+return rehabTotal + buffer;
 }
 
-/* PROPERTY LINKS (REAL VALUE ADD) */
-function buildLinks(){
+/* =========================
+   PROPERTY LINKS
+========================= */
+
+function generateLinks(){
 let a = encodeURIComponent(address.value);
 
 links.innerHTML = `
-<a target="_blank" href="https://www.redfin.com/search?q=${a}">🔴 Redfin</a><br>
-<a target="_blank" href="https://www.zillow.com/homes/${a}_rb/">🏠 Zillow</a><br>
-<a target="_blank" href="https://www.google.com/search?q=${a}">🌐 Google Search</a>
+<a target="_blank" href="https://www.redfin.com/search?q=${a}">Redfin</a> |
+<a target="_blank" href="https://www.zillow.com/homes/${a}_rb/">Zillow</a> |
+<a target="_blank" href="https://www.google.com/search?q=${a}">Google</a>
 `;
 }
 
-/* STRATEGY ENGINE */
-function calcStrategy(){
+/* =========================
+   3 TIER STRATEGY
+========================= */
+
+function runStrategy(){
 
 let p = parseFloat(purchase.value)||0;
 let a = parseFloat(arv.value)||0;
-
-let cash = a * 0.65;
-let refi = a * 0.70;
-let seller = a * 0.75;
+let r = calcRehab();
 
 strategy.innerHTML = `
-<b>Cash Offer (65% ARV):</b> $${cash.toFixed(0)}<br>
-<b>Refi Position (70% ARV):</b> $${refi.toFixed(0)}<br>
-<b>Seller Finance Target (75% ARV):</b> $${seller.toFixed(0)}<br><br>
+Cash Offer (65% ARV): $${(a*0.65).toFixed(0)}<br>
+Refi (70% ARV): $${(a*0.70).toFixed(0)}<br>
+Seller Finance (75% ARV): $${(a*0.75).toFixed(0)}<br><br>
 
-<b>All-In Check:</b> ${(p + rehabTotal).toFixed(0)}<br>
-<b>ARV Spread:</b> ${(a - (p + rehabTotal)).toFixed(0)}
+All-In Cost: ${(p+r).toFixed(0)}<br>
+Spread: ${(a-(p+r)).toFixed(0)}
 `;
 }
 
-/* EMAIL EXPORT */
-function emailDeal(){
+/* =========================
+   EXPORT REHAB
+========================= */
 
-let body = `
-RO'LYFE DEAL SNAPSHOT
+function exportRehab(){
+let text="RO'Lyfe COGO Rehab Scope\n\n";
 
-Address: ${address.value}
-Purchase: ${purchase.value}
-ARV: ${arv.value}
+rehabItems.forEach((r,i)=>{
+let v=document.getElementById("r"+i).value;
+if(v>0) text+=`${r[1]}: $${v}\n`;
+});
 
-REHAB TOTAL: ${rehabTotal}
-
-Cash Offer (65%): ${(arv.value*0.65)}
-Refi (70%): ${(arv.value*0.70)}
-Seller Finance (75%): ${(arv.value*0.75)}
-
-Generated by RO'Lyfe OS
-`;
-
-window.location.href =
-`mailto:richman@rootoflyfe.com?subject=Deal Snapshot&body=${encodeURIComponent(body)}`;
+rehabExport.innerText=text;
 }
 
-/* PACKET */
-function generatePacket(){
-alert("Investor packet ready — use Email Deal or PDF Export");
+/* =========================
+   EMAIL REHAB
+========================= */
+
+function emailRehab(){
+let body=rehabExport.innerText;
+
+window.location.href=
+`mailto:richman@rootoflyfe.com?subject=COGO Rehab Scope&body=${encodeURIComponent(body)}`;
 }
 
-/* PDF */
+/* =========================
+   PDF
+========================= */
+
 function downloadPDF(){
-let w = window.open();
-w.document.write(`
-<h2>RO'Lyfe Deal Packet</h2>
-<p>${address.value}</p>
-<p>Purchase: ${purchase.value}</p>
-<p>ARV: ${arv.value}</p>
-<p>Rehab: ${rehabTotal}</p>
-`);
+let w=window.open();
+w.document.write(`<pre>${rehabExport.innerText}</pre>`);
 w.print();
-}
-
-/* RESET */
-function resetAll(){
-if(confirm("Reset everything?")){
-location.reload();
-}
 }
 
 </script>
