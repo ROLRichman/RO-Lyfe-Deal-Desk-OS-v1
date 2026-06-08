@@ -353,6 +353,128 @@ target="_blank">
 
 </section>
 
+  <!-- ========================================= -->
+<!-- DEAL INTAKE ENGINE -->
+<!-- ========================================= -->
+
+<section class="card">
+
+<h2>📍 DEAL INTAKE ENGINE</h2>
+
+<p>
+
+Enter property information to begin underwriting.
+
+Atlas will use these numbers throughout the platform
+for rehab, funding, underwriting and investor packets.
+
+</p>
+
+<div class="form-grid">
+
+<input
+id="propertyAddress"
+placeholder="Property Address">
+
+<input
+id="city"
+placeholder="City">
+
+<input
+id="state"
+placeholder="State">
+
+<input
+id="zip"
+placeholder="Zip Code">
+
+<input
+id="purchasePrice"
+placeholder="Purchase Price">
+
+<input
+id="arv"
+placeholder="After Repair Value (ARV)">
+
+<input
+id="sellerAsking"
+placeholder="Seller Asking Price">
+
+<input
+id="earnestMoney"
+placeholder="EMD">
+
+<select id="leadSource">
+
+<option>Lead Source</option>
+
+<option>Wholesaler</option>
+
+<option>Realtor</option>
+
+<option>Contractor</option>
+
+<option>Direct Seller</option>
+
+<option>Investor</option>
+
+<option>Auction</option>
+
+<option>Probate</option>
+
+<option>Driving For Dollars</option>
+
+<option>Facebook</option>
+
+<option>Google</option>
+
+<option>Referral</option>
+
+</select>
+
+</div>
+
+<br>
+
+<div class="button-grid">
+
+<button onclick="generateLinks()">
+🔗 Generate Property Links
+</button>
+
+<button onclick="runDealScore()">
+📊 Run Deal Score
+</button>
+
+<button onclick="atlasReview()">
+🤖 Atlas Review
+</button>
+
+</div>
+
+<br>
+
+<div id="propertyLinks"></div>
+
+<br>
+
+<div id="dealScoreBox"
+class="output-box">
+
+Deal Score Waiting...
+
+</div>
+
+<br>
+
+<div id="atlasBox"
+class="output-box">
+
+Atlas Commentary Waiting...
+
+</div>
+
+</section>
 
 <!-- ========================================= -->
 <!-- BUSINESS LOAN APPLICATION EMBED -->
