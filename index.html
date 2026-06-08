@@ -605,6 +605,108 @@ Waiting for calculation...
 </div>
 
 </section>
+
+<!-- ========================================= -->
+<!-- FUNDING HUB -->
+<!-- ========================================= -->
+
+<section class="card">
+
+<h2>🏦 FUNDING HUB</h2>
+
+<p>
+
+Pick a funding program, run the numbers,
+package the file, then submit for review.
+
+</p>
+
+<select id="loanType">
+
+<option>Business Term Loan</option>
+<option>SBA 7(a)</option>
+<option>SBA 504 Real Estate</option>
+<option>Working Capital</option>
+<option>Line Of Credit</option>
+<option>Startup Funding</option>
+<option>Equipment Financing</option>
+<option>Invoice Factoring</option>
+<option>Merchant Cash Advance</option>
+<option>Franchise Funding</option>
+<option>Commercial Real Estate</option>
+<option>Fix & Flip</option>
+<option>Bridge Loan</option>
+<option>DSCR Rental Loan</option>
+<option>Private Money</option>
+<option>Hard Money</option>
+<option>Construction Loan</option>
+<option>HELOC</option>
+<option>Debt Consolidation</option>
+<option>Credit Repair Funding</option>
+
+</select>
+
+<div class="form-grid">
+
+<input
+id="projectAmount"
+placeholder="Project / Purchase Amount">
+
+<input
+id="loanAmount"
+placeholder="Requested Loan Amount">
+
+<input
+id="interestRate"
+value="10"
+placeholder="Interest Rate %">
+
+<input
+id="termMonths"
+value="60"
+placeholder="Term (Months)">
+
+<input
+id="origination"
+value="2"
+placeholder="Points / Origination %">
+
+<input
+id="monthlyIncome"
+placeholder="Monthly Revenue / Rent">
+
+<input
+id="monthlyDebt"
+placeholder="Monthly Expenses">
+
+<input
+id="collateral"
+placeholder="Collateral / ARV Value">
+
+</div>
+
+<div class="button-grid">
+
+<button onclick="runFundingCalc()">
+🧮 Calculate Funding
+</button>
+
+<button onclick="resetFundingCalc()">
+♻ Reset
+</button>
+
+</div>
+
+<div
+id="fundingResults"
+class="output-box"
+style="margin-top:15px;">
+
+Funding Analysis Waiting...
+
+</div>
+
+</section>
   
 <!-- REHAB ITEMS LOAD HERE -->
 
