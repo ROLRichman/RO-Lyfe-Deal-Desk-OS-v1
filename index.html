@@ -1057,3 +1057,77 @@ document.getElementById("rehabGrid").innerHTML = html;
 buildRehabGrid();
 
   </script>
+
+  <script>
+
+function runOfferEngine(){
+
+let arv =
+Number(document.getElementById("offerArv").value)||0;
+
+let repairs =
+Number(document.getElementById("offerRepair").value)||0;
+
+let profit =
+Number(document.getElementById("offerDesiredProfit").value)||0;
+
+let cashPct =
+Number(document.getElementById("cashPercent").value)/100;
+
+let carryPct =
+Number(document.getElementById("sellerCarryPercent").value)/100;
+
+let financePct =
+Number(document.getElementById("sellerFinancePercent").value)/100;
+
+let cashOffer =
+(arv * cashPct) - repairs - profit;
+
+let carryOffer =
+(arv * carryPct);
+
+let financeOffer =
+(arv * financePct);
+
+document.getElementById("offerResults").innerHTML = `
+
+<h3>💰 Offer Results</h3>
+
+<b>All Cash Offer</b><br>
+$${cashOffer.toLocaleString()}
+
+<hr>
+
+<b>Seller Carry Offer</b><br>
+$${carryOffer.toLocaleString()}
+
+<hr>
+
+<b>Seller Finance Offer</b><br>
+$${financeOffer.toLocaleString()}
+
+<hr>
+
+<b>ARV</b><br>
+$${arv.toLocaleString()}
+
+<hr>
+
+<b>Repairs</b><br>
+$${repairs.toLocaleString()}
+
+`;
+
+}
+
+function copyOfferResults(){
+
+navigator.clipboard.writeText(
+document.getElementById("offerResults").innerText
+);
+
+alert("Offers copied.");
+
+}
+
+  </script>
