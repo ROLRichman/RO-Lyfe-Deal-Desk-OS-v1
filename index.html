@@ -1,1 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
 
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>
+RO'Lyfe OS v5.1
+</title>
+
+<style>
+
+:root{
+
+--bg:#0b0f14;
+--card:#151c28;
+--card2:#1c2635;
+--blue:#00d4ff;
+--green:#22c55e;
+--gold:#fbbf24;
+--red:#ef4444;
+--text:#ffffff;
+--border:#2c3a4d;
+
+}
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+}
+
+body{
+background:var(--bg);
+color:var(--text);
+overflow-x:hidden;
+}
+
+/* LOGIN SCREEN */
+
+#loginScreen{
+
+position:fixed;
+inset:0;
+
+background:
+linear-gradient(
+135deg,
+#0f172a,
+#020617
+);
+
+display:flex;
+justify-content:center;
+align-items:center;
+
+z-index:9999;
+
+}
+
+.login-card{
+
+width:95%;
+max-width:450px;
+
+background:var(--card);
+
+padding:30px;
+
+border-radius:20px;
+
+border:1px solid var(--border);
+
+box-shadow:
+0 0 40px rgba(0,212,255,.15);
+
+text-align:center;
+
+}
+
+.login-card h1{
+
+color:var(--blue);
+
+margin-bottom:10px;
+
+}
+
+.login-card p{
+
+opacity:.8;
+
+margin-bottom:25px;
+
+line-height:1.5;
+
+}
+
+.login-card input{
+
+width:100%;
+
+padding:14px;
+
+margin-bottom:12px;
+
+border:none;
+
+border-radius:10px;
+
+background:#0f172a;
+
+color:white;
+
+}
+
+.login-card button{
+
+width:100%;
+
+padding:14px;
+
+border:none;
+
+border-radius:10px;
+
+background:var(--blue);
+
+font-weight:bold;
+
+cursor:pointer;
+
+}
+
+/* APP */
+
+#app{
+
+display:none;
+
+}
+
+/* TOPBAR */
+
+.topbar{
+
+height:70px;
+
+background:#111827;
+
+display:flex;
+
+align-items:center;
+
+justify-content:space-between;
+
+padding:0 20px;
+
+border-bottom:1px solid var(--border);
+
+position:sticky;
+
+top:0;
+
+z-index:999;
+
+}
+
+.logo{
+
+font-size:24px;
+
+font-weight:bold;
+
+color:var(--blue);
+
+}
+
+.top-actions{
+
+display:flex;
+gap:10px;
+
+}
+
+/* LAYOUT */
+
+.layout{
+
+display:flex;
+
+min-height:calc(100vh - 70px);
+
+}
+
+/* SIDEBAR */
+
+.sidebar{
+
+width:260px;
+
+background:#111827;
+
+border-right:1px solid var(--border);
+
+padding:20px;
+
+}
+
+.sidebar a{
+
+display:block;
+
+padding:12px;
+
+margin-bottom:8px;
+
+background:#1f2937;
+
+border-radius:10px;
+
+text-decoration:none;
+
+color:white;
+
+}
+
+.sidebar a:hover{
+
+background:var(--blue);
+color:black;
+
+}
+
+/* MAIN */
+
+.main{
+
+flex:1;
+
+padding:20px;
+
+}
+
+/* DASHBOARD */
+
+.dashboard{
+
+display:grid;
+
+grid-template-columns:
+repeat(auto-fit,minmax(250px,1fr));
+
+gap:20px;
+
+}
+
+.card{
+
+background:var(--card);
+
+border:1px solid var(--border);
+
+border-radius:15px;
+
+padding:20px;
+
+}
+
+.card h3{
+
+color:var(--blue);
+
+margin-bottom:10px;
+
+}
+
+.card p{
+
+line-height:1.6;
+
+opacity:.9;
+
+}
+
+/* BUTTONS */
+
+.btn{
+
+display:inline-block;
+
+padding:12px 18px;
+
+border-radius:10px;
+
+font-weight:bold;
+
+text-decoration:none;
+
+margin:5px;
+
+cursor:pointer;
+
+border:none;
+
+}
+
+.blue{
+background:var(--blue);
+color:black;
+}
+
+.green{
+background:var(--green);
+color:black;
+}
+
+.gold{
+background:var(--gold);
+color:black;
+}
+
+/* ATLAS */
+
+#atlasBubble{
+
+position:fixed;
+
+bottom:20px;
+right:20px;
+
+width:65px;
+height:65px;
+
+border-radius:50%;
+
+background:var(--blue);
+
+display:flex;
+
+justify-content:center;
+align-items:center;
+
+font-size:28px;
+
+cursor:pointer;
+
+z-index:999;
+
+box-shadow:
+0 0 25px rgba(0,212,255,.5);
+
+}
+
+@media(max-width:900px){
+
+.layout{
+
+flex-direction:column;
+
+}
+
+.sidebar{
+
+width:100%;
+
+}
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<!-- LOGIN -->
+
+<div id="loginScreen">
+
+<div class="login-card">
+
+<h1>
+RO'Lyfe OS v5.1
+</h1>
+
+<p>
+
+Welcome to the RO'Lyfe Holdings Command Center.
+
+Analyze deals.
+Package funding.
+Build investor packets.
+Control capital.
+
+Powered by Atlas AI.
+
+</p>
+
+<input
+id="userEmail"
+placeholder="Email">
+
+<input
+id="userPassword"
+type="password"
+placeholder="Password">
+
+<button onclick="enterSystem()">
+ENTER COMMAND CENTER
+</button>
+
+</div>
+
+</div>
+
+<!-- APP -->
+
+<div id="app">
+
+<div class="topbar">
+
+<div class="logo">
+
+RO'Lyfe OS v5.1
+
+</div>
+
+<div class="top-actions">
+
+<button class="btn green">
+Funding
+</button>
+
+<button class="btn gold">
+Pipeline
+</button>
+
+</div>
+
+</div>
+
+<div class="layout">
+
+<div class="sidebar">
+
+<a href="#">🏠 Dashboard</a>
+
+<a href="deal-desk/">📍 Deal Desk</a>
+
+<a href="rehab/">🛠 Rehab Engine</a>
+
+<a href="funding/">🏦 Funding Hub</a>
+
+<a href="investor-packet/">📦 Investor Packet</a>
+
+<a href="market-terminal/">📈 Market Terminal</a>
+
+<a href="media/">🎬 Media</a>
+
+<a href="tools/">🧰 Tools</a>
+
+<a href="docs/">📂 Docs</a>
+
+<a href="settings/">⚙ Settings</a>
+
+</div>
+
+<div class="main">
+
+<h1>
+RO'Lyfe Command Center
+</h1>
+
+<br>
+
+<div class="dashboard">
+
+<div class="card">
+
+<h3>📍 Deal Intake</h3>
+
+<p>
+Analyze acquisitions, ARV,
+rehab, funding needs and
+investor opportunities.
+</p>
+
+</div>
+
+<div class="card">
+
+<h3>🛠 COGO Rehab</h3>
+
+<p>
+70+ lender scope items.
+Institutional rehab budgeting.
+</p>
+
+</div>
+
+<div class="card">
+
+<h3>🏦 Funding Hub</h3>
+
+<p>
+20+ funding programs.
+Business and real estate.
+</p>
+
+</div>
+
+<div class="card">
+
+<h3>📦 Investor Packet</h3>
+
+<p>
+Generate professional
+funding and acquisition packets.
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<div id="atlasBubble">
+🤖
+</div>
+
+<script>
+
+function enterSystem(){
+
+document.getElementById(
+"loginScreen"
+).style.display="none";
+
+document.getElementById(
+"app"
+).style.display="block";
+
+}
+
+</script>
+
+</body>
+  </html>
