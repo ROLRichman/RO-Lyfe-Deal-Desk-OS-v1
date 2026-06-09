@@ -6,14 +6,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>
-RO'Lyfe OS v5.1
-</title>
+<title>RO'Lyfe OS v5.1</title>
 
 <style>
 
 :root{
-
 --bg:#0b0f14;
 --card:#151c28;
 --card2:#1c2635;
@@ -21,9 +18,8 @@ RO'Lyfe OS v5.1
 --green:#22c55e;
 --gold:#fbbf24;
 --red:#ef4444;
---text:#ffffff;
---border:#2c3a4d;
-
+--white:#ffffff;
+--border:#2b3648;
 }
 
 *{
@@ -35,282 +31,108 @@ font-family:Arial,sans-serif;
 
 body{
 background:var(--bg);
-color:var(--text);
+color:white;
 overflow-x:hidden;
 }
 
-/* LOGIN SCREEN */
+/* LOGIN */
 
 #loginScreen{
-
 position:fixed;
 inset:0;
-
-background:
-linear-gradient(
-135deg,
-#0f172a,
-#020617
-);
-
 display:flex;
 justify-content:center;
 align-items:center;
-
+background:
+linear-gradient(
+135deg,
+#020617,
+#0f172a
+);
 z-index:9999;
-
 }
 
 .login-card{
-
 width:95%;
 max-width:450px;
-
 background:var(--card);
-
 padding:30px;
-
 border-radius:20px;
-
 border:1px solid var(--border);
-
+text-align:center;
 box-shadow:
 0 0 40px rgba(0,212,255,.15);
-
-text-align:center;
-
 }
 
 .login-card h1{
-
 color:var(--blue);
-
 margin-bottom:10px;
-
 }
 
 .login-card p{
-
 opacity:.8;
-
-margin-bottom:25px;
-
-line-height:1.5;
-
+line-height:1.6;
+margin-bottom:20px;
 }
 
 .login-card input{
-
 width:100%;
-
 padding:14px;
-
 margin-bottom:12px;
-
 border:none;
-
 border-radius:10px;
-
 background:#0f172a;
-
 color:white;
-
 }
 
 .login-card button{
-
 width:100%;
-
 padding:14px;
-
 border:none;
-
 border-radius:10px;
-
-background:var(--blue);
-
 font-weight:bold;
-
+background:var(--blue);
 cursor:pointer;
-
 }
 
 /* APP */
 
 #app{
-
 display:none;
-
 }
 
 /* TOPBAR */
 
 .topbar{
-
 height:70px;
-
 background:#111827;
-
-display:flex;
-
-align-items:center;
-
-justify-content:space-between;
-
-padding:0 20px;
-
 border-bottom:1px solid var(--border);
-
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:0 20px;
 position:sticky;
-
 top:0;
-
 z-index:999;
-
 }
 
 .logo{
-
 font-size:24px;
-
 font-weight:bold;
-
 color:var(--blue);
-
 }
 
 .top-actions{
-
 display:flex;
 gap:10px;
-
 }
-
-/* LAYOUT */
-
-.layout{
-
-display:flex;
-
-min-height:calc(100vh - 70px);
-
-}
-
-/* SIDEBAR */
-
-.sidebar{
-
-width:260px;
-
-background:#111827;
-
-border-right:1px solid var(--border);
-
-padding:20px;
-
-}
-
-.sidebar a{
-
-display:block;
-
-padding:12px;
-
-margin-bottom:8px;
-
-background:#1f2937;
-
-border-radius:10px;
-
-text-decoration:none;
-
-color:white;
-
-}
-
-.sidebar a:hover{
-
-background:var(--blue);
-color:black;
-
-}
-
-/* MAIN */
-
-.main{
-
-flex:1;
-
-padding:20px;
-
-}
-
-/* DASHBOARD */
-
-.dashboard{
-
-display:grid;
-
-grid-template-columns:
-repeat(auto-fit,minmax(250px,1fr));
-
-gap:20px;
-
-}
-
-.card{
-
-background:var(--card);
-
-border:1px solid var(--border);
-
-border-radius:15px;
-
-padding:20px;
-
-}
-
-.card h3{
-
-color:var(--blue);
-
-margin-bottom:10px;
-
-}
-
-.card p{
-
-line-height:1.6;
-
-opacity:.9;
-
-}
-
-/* BUTTONS */
 
 .btn{
-
-display:inline-block;
-
-padding:12px 18px;
-
-border-radius:10px;
-
-font-weight:bold;
-
-text-decoration:none;
-
-margin:5px;
-
-cursor:pointer;
-
+padding:10px 16px;
 border:none;
-
-}
-
-.blue{
-background:var(--blue);
-color:black;
+border-radius:10px;
+font-weight:bold;
+cursor:pointer;
 }
 
 .green{
@@ -323,50 +145,138 @@ background:var(--gold);
 color:black;
 }
 
+.blue{
+background:var(--blue);
+color:black;
+}
+
+/* LAYOUT */
+
+.layout{
+display:flex;
+min-height:calc(100vh - 70px);
+}
+
+/* SIDEBAR */
+
+.sidebar{
+width:260px;
+background:#111827;
+border-right:1px solid var(--border);
+padding:20px;
+}
+
+.sidebar a{
+display:block;
+padding:12px;
+margin-bottom:8px;
+border-radius:10px;
+background:#1f2937;
+text-decoration:none;
+color:white;
+transition:.2s;
+}
+
+.sidebar a:hover{
+background:var(--blue);
+color:black;
+}
+
+/* MAIN */
+
+.main{
+flex:1;
+padding:20px;
+}
+
+/* CARDS */
+
+.card{
+background:var(--card);
+border:1px solid var(--border);
+border-radius:15px;
+padding:20px;
+margin-bottom:20px;
+}
+
+.card h2{
+color:var(--blue);
+margin-bottom:15px;
+}
+
+.card h3{
+color:var(--blue);
+margin-bottom:10px;
+}
+
+.card p{
+line-height:1.6;
+opacity:.9;
+}
+
+/* DASHBOARD GRID */
+
+.dashboard{
+display:grid;
+grid-template-columns:
+repeat(auto-fit,minmax(250px,1fr));
+gap:20px;
+}
+
+/* PIPELINE */
+
+.pipeline{
+display:grid;
+grid-template-columns:
+repeat(auto-fit,minmax(120px,1fr));
+gap:10px;
+margin-top:15px;
+}
+
+.stage{
+background:#1f2937;
+padding:15px;
+text-align:center;
+border-radius:10px;
+}
+
+/* CLOCK */
+
+.clock{
+font-size:24px;
+font-weight:bold;
+margin-top:10px;
+}
+
 /* ATLAS */
 
 #atlasBubble{
-
 position:fixed;
-
 bottom:20px;
 right:20px;
-
 width:65px;
 height:65px;
-
-border-radius:50%;
-
 background:var(--blue);
-
+border-radius:50%;
 display:flex;
-
 justify-content:center;
 align-items:center;
-
-font-size:28px;
-
+font-size:30px;
 cursor:pointer;
-
-z-index:999;
-
 box-shadow:
 0 0 25px rgba(0,212,255,.5);
-
 }
+
+/* MOBILE */
 
 @media(max-width:900px){
 
 .layout{
-
 flex-direction:column;
-
 }
 
 .sidebar{
-
 width:100%;
-
 }
 
 }
@@ -383,34 +293,26 @@ width:100%;
 
 <div class="login-card">
 
-<h1>
-RO'Lyfe OS v5.1
-</h1>
+<h1>RO'Lyfe OS v5.1</h1>
 
 <p>
 
-Welcome to the RO'Lyfe Holdings Command Center.
+RO'Lyfe Holdings Command Center
 
-Analyze deals.
-Package funding.
-Build investor packets.
-Control capital.
+Real Estate • Business Funding • Private Capital
 
-Powered by Atlas AI.
+Powered by Atlas AI
 
 </p>
 
-<input
-id="userEmail"
-placeholder="Email">
+<input placeholder="Email">
 
-<input
-id="userPassword"
-type="password"
-placeholder="Password">
+<input type="password" placeholder="Password">
 
 <button onclick="enterSystem()">
+
 ENTER COMMAND CENTER
+
 </button>
 
 </div>
@@ -420,6 +322,8 @@ ENTER COMMAND CENTER
 <!-- APP -->
 
 <div id="app">
+
+<!-- TOPBAR -->
 
 <div class="topbar">
 
@@ -432,18 +336,26 @@ RO'Lyfe OS v5.1
 <div class="top-actions">
 
 <button class="btn green">
+
 Funding
+
 </button>
 
 <button class="btn gold">
+
 Pipeline
+
 </button>
 
 </div>
 
 </div>
 
+<!-- LAYOUT -->
+
 <div class="layout">
+
+<!-- SIDEBAR -->
 
 <div class="sidebar">
 
@@ -451,222 +363,10 @@ Pipeline
 
 <a href="deal-desk/">📍 Deal Desk</a>
 
-<a href="rehab/">🛠 Rehab Engine</a>
+<a href="rehab/">🛠 COGO Rehab</a>
 
 <a href="funding/">🏦 Funding Hub</a>
 
-<!-- ========================================= -->
-<!-- RO'LYFE UNDERWRITING ENGINE -->
-<!-- ========================================= -->
-
-<section class="card">
-
-<h2>🏦 RO'LYFE UNDERWRITING ENGINE</h2>
-
-<p>
-Run the exact funding analysis used to determine:
-Loan Amount, Cash To Close,
-Gap Funding Need,
-Profit,
-and Deal Viability.
-</p>
-
-<div class="form-grid">
-
-<input id="uwPurchase" placeholder="Purchase Price">
-
-<input id="uwRehab" placeholder="Rehab Budget">
-
-<input id="uwAssignment" placeholder="Assignment Fee">
-
-<input id="uwClosing" placeholder="Closing Costs">
-
-<input id="uwHolding" placeholder="Holding Costs">
-
-<input id="uwArv" placeholder="ARV">
-
-<input id="uwLtv" value="65" placeholder="HML LTV %">
-
-<input id="uwRate" value="12" placeholder="Rate %">
-
-<input id="uwMonths" value="12" placeholder="Months">
-
-</div>
-
-<div class="button-grid">
-
-<button onclick="runUnderwriting()">
-⚡ Analyze Deal
-</button>
-
-</div>
-
-<div id="uwResults"
-class="output-box"
-style="margin-top:15px;">
-
-Underwriting Waiting...
-
-</div>
-
-</section>
-
-  function runUnderwriting(){
-
-let purchase =
-Number(document.getElementById("uwPurchase").value)||0;
-
-let rehab =
-Number(document.getElementById("uwRehab").value)||0;
-
-let assignment =
-Number(document.getElementById("uwAssignment").value)||0;
-
-let closing =
-Number(document.getElementById("uwClosing").value)||0;
-
-let holding =
-Number(document.getElementById("uwHolding").value)||0;
-
-let arv =
-Number(document.getElementById("uwArv").value)||0;
-
-let ltv =
-(Number(document.getElementById("uwLtv").value)||65)/100;
-
-let rate =
-(Number(document.getElementById("uwRate").value)||12)/100;
-
-let months =
-Number(document.getElementById("uwMonths").value)||12;
-
-let totalCost =
-purchase +
-rehab +
-assignment +
-closing +
-holding;
-
-let loan =
-arv * ltv;
-
-let cashToClose =
-totalCost - loan;
-
-let interest =
-loan * rate * (months/12);
-
-let projectedProfit =
-arv -
-totalCost -
-interest;
-
-let verdict =
-projectedProfit > 30000
-? "✅ FUNDABLE"
-: "❌ REVIEW";
-
-document.getElementById("uwResults").innerHTML = `
-
-<h3>📊 Underwriting Results</h3>
-
-<b>Total Project Cost</b><br>
-$${totalCost.toLocaleString()}
-
-<hr>
-
-<b>Loan Amount</b><br>
-$${loan.toLocaleString()}
-
-<hr>
-
-<b>Cash To Close</b><br>
-$${cashToClose.toLocaleString()}
-
-<hr>
-
-<b>Estimated Interest</b><br>
-$${interest.toLocaleString()}
-
-<hr>
-
-<b>Projected Profit</b><br>
-$${projectedProfit.toLocaleString()}
-
-<hr>
-
-<b>Decision</b><br>
-${verdict}
-
-`;
-
-}
-
-<a href="#creditRepair">
-💳 Credit Repair
-</a>
-
-  <section class="module" id="creditRepair">
-
-<h2>💳 ASAP Credit Repair Portal</h2>
-
-<p>
-Submit clients, track referrals,
-monitor commissions,
-and help clients improve
-their personal and business credit.
-</p>
-
-<div class="button-grid">
-
-<a class="btn green"
-href="https://portal.asapcreditrepairusa.com/direct-signup/RichardsonLegagneur28158"
-target="_blank">
-
-➕ Submit Client
-
-</a>
-
-<a class="btn"
-href="https://portal.asapcreditrepairusa.com/self-signup/RichardsonLegagneur28158"
-target="_blank">
-
-👤 Client Self Signup
-
-</a>
-
-<a class="btn gold"
-href="https://funnel.asapcreditrepairusa.com/fast-results?affId=RichardsonLegagneur28158"
-target="_blank">
-
-🚀 Marketing Funnel
-
-</a>
-
-</div>
-
-<div class="atlas-box">
-
-<b>Atlas Recommendation:</b>
-
-Use credit repair as the first step when:
-
-• Credit score blocks approval
-
-• DSCR loan denied
-
-• SBA declined
-
-• Business funding declined
-
-• Client needs trade lines
-
-• Client needs score optimization
-
-</div>
-
-  </section>
-  
 <a href="investor-packet/">📦 Investor Packet</a>
 
 <a href="market-terminal/">📈 Market Terminal</a>
@@ -681,35 +381,66 @@ Use credit repair as the first step when:
 
 </div>
 
+<!-- MAIN -->
+
 <div class="main">
 
-<h1>
-RO'Lyfe Command Center
-</h1>
+<!-- WELCOME -->
 
-<br>
+<div class="card">
+
+<h2>🤖 Atlas AI Command Center</h2>
+
+<p>
+
+Welcome to RO'Lyfe Holdings.
+
+Atlas AI helps analyze:
+
+Fix & Flip Deals
+
+BRRRR Deals
+
+Business Funding
+
+DSCR Loans
+
+Private Capital
+
+Gap Funding
+
+Investor Packages
+
+Acquisition Opportunities
+
+</p>
+
+</div>
+
+<!-- DASHBOARD -->
 
 <div class="dashboard">
 
 <div class="card">
 
-<h3>📍 Deal Intake</h3>
+<h3>📍 Deal Desk</h3>
 
 <p>
-Analyze acquisitions, ARV,
-rehab, funding needs and
-investor opportunities.
+Deal Intake
+Property Analysis
+Acquisition Review
 </p>
 
 </div>
 
 <div class="card">
 
-<h3>🛠 COGO Rehab</h3>
+<h3>🛠 Rehab Engine</h3>
 
 <p>
-70+ lender scope items.
-Institutional rehab budgeting.
+COGO Scope
+70+ Rehab Categories
+Contractor Budgeting
 </p>
 
 </div>
@@ -719,8 +450,11 @@ Institutional rehab budgeting.
 <h3>🏦 Funding Hub</h3>
 
 <p>
-20+ funding programs.
-Business and real estate.
+Business Loans
+SBA
+DSCR
+Fix & Flip
+Private Capital
 </p>
 
 </div>
@@ -730,13 +464,56 @@ Business and real estate.
 <h3>📦 Investor Packet</h3>
 
 <p>
-Generate professional
-funding and acquisition packets.
+Professional Funding Packages
+Executive Summaries
+Deal Packaging
 </p>
 
 </div>
 
 </div>
+
+<!-- COMMAND CENTER -->
+
+<div class="card">
+
+<h2>📅 Command Center</h2>
+
+<div id="liveClock" class="clock">
+
+00:00:00
+
+</div>
+
+</div>
+
+<!-- PIPELINE -->
+
+<div class="card">
+
+<h2>📊 Live Pipeline</h2>
+
+<div class="pipeline">
+
+<div class="stage">📥 Intake</div>
+
+<div class="stage">📑 Review</div>
+
+<div class="stage">🏦 Underwriting</div>
+
+<div class="stage">📤 Submitted</div>
+
+<div class="stage">🤝 Negotiation</div>
+
+<div class="stage">✅ Approved</div>
+
+<div class="stage">🏁 Closed</div>
+
+</div>
+
+</div>
+
+<!-- PART 2 GOES HERE -->
 
 </div>
 
@@ -762,7 +539,18 @@ document.getElementById(
 
 }
 
+setInterval(()=>{
+
+const now = new Date();
+
+document.getElementById(
+"liveClock"
+).innerHTML=
+now.toLocaleTimeString();
+
+},1000);
+
 </script>
 
 </body>
-  </html>
+</html>
